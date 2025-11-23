@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn Hàng - AuraAdmin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><h2><i class="fa-solid fa-shirt"></i> AuraAdmin</h2></div>
+        <ul class="menu">
+            <li><a href="index.html"><i class="fa-solid fa-chart-line"></i> <span>Thống Kê</span></a></li>
+            <li><a href="products.html"><i class="fa-solid fa-box-open"></i> <span>Sản Phẩm</span></a></li>
+            <li><a href="categories.html"><i class="fa-solid fa-list"></i> <span>Danh Mục</span></a></li>
+            <li class="active"><a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> <span>Đơn Hàng</span></a></li>
+            <li><a href="customers.html"><i class="fa-solid fa-users"></i> <span>Người Dùng</span></a></li>
+            <li class="logout"><a href="#"><i class="fa-solid fa-right-from-bracket"></i> <span>Đăng Xuất</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Quản Lý Đơn Hàng</h1>
+            <div class="user-wrapper">
+                <img src="https://via.placeholder.com/40" alt="Admin">
+                <div><h4>Admin</h4><small>Super Admin</small></div>
+            </div>
+        </header>
+
+        <main>
+            <div style="margin-bottom:1rem;">
+                <button class="btn-primary">Tất cả</button>
+                <button class="btn-secondary">Chờ duyệt</button>
+                <button class="btn-secondary">Đã giao</button>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3>Danh Sách Đơn</h3></div>
+                <div class="card-body">
+                    <table width="100%">
+                        <thead><tr><td>Mã</td><td>Khách</td><td>Ngày</td><td>Tổng tiền</td><td>TT</td><td>Hành động</td></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD-01</td><td>Nguyễn Văn A</td><td>24/11</td><td>$120</td>
+                                <td><span class="badge warning">Chờ duyệt</span></td>
+                                <td><button class="btn-primary">Duyệt</button> <button class="btn-danger">Hủy</button></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-02</td><td>Trần B</td><td>20/11</td><td>$200</td>
+                                <td><span class="badge success">Đã giao</span></td>
+                                <td><button class="btn-secondary">Chi tiết</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
