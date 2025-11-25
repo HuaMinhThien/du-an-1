@@ -23,7 +23,9 @@ class HomeController {
     public function products(){
         include_once 'pages/products.php';
     }
-    
+    public function products_Details(){
+        include_once 'pages/products_Details.php';
+    }
     
 
 }
