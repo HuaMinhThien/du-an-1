@@ -138,6 +138,22 @@ CREATE TABLE `color` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `color`
+--
+
+INSERT INTO `color` (`id`, `name`, `code`) VALUES
+(1, 'Đỏ', '#FF0000'),
+(2, 'Xanh dương', '#0000FF'),
+(3, 'Xanh lá', '#00FF00'),
+(4, 'Đen', '#000000'),
+(5, 'Trắng', '#FFFFFF'),
+(6, 'Xám', '#808080'),
+(7, 'Vàng', '#FFFF00'),
+(8, 'Cam', '#FFA500'),
+(9, 'Hồng', '#FFC0CB'),
+(10, 'Tím', '#800080');
+
 -- --------------------------------------------------------
 
 --
@@ -196,7 +212,11 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `description`, `img`, `img_child`, `category_id`, `id_gender`) VALUES
-(1, 'Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C', 350000, 'Mẫu áo Polo nam với chất liệu vải thoáng mát, thấm hút mồ hôi tốt, thích hợp cho cả đi làm và dạo phố. Thiết kế form vừa vặn giúp tôn dáng và mang lại vẻ ngoài lịch lãm.', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 1, 1);
+(1, 'Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C', 350000, 'Mẫu áo Polo nam với chất liệu vải thoáng mát, thấm hút mồ hôi tốt, thích hợp cho cả đi làm và dạo phố. Thiết kế form vừa vặn giúp tôn dáng và mang lại vẻ ngoài lịch lãm.', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 1, 1),
+(2, 'Áo Polo Nam Phối Viền Cổ', 390000, 'Thiết kế phối viền trẻ trung, năng động. Màu đen nam tính dễ dàng phối với quần Jeans hoặc Kaki.', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 1, 1),
+(3, 'Áo Polo Luxury Basic', 550000, 'Dòng sản phẩm cao cấp với chất liệu lụa băng siêu mát. Logo thêu nổi tinh tế khẳng định đẳng cấp.', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 1, 1),
+(4, 'Áo Sơ Mi Nam Oxford', 450000, 'Vải Oxford dày dặn, đứng form, ít nhăn. Phù hợp cho môi trường công sở.', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 1, 1),
+(5, 'Quần Jeans Nam Slimfit', 550000, 'Chất Jeans co giãn nhẹ, form ôm vừa vặn tôn dáng. Màu wash bền đẹp theo thời gian.', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 'assets/images/áo nam/ao-nam-Áo Polo Nam Tay Ngắn Form Vừa KS25FH40C-SCHE-hình10.jpg', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -216,6 +236,19 @@ CREATE TABLE `product_variant` (
   KEY `size_id` (`size_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `product_variant`
+--
+
+INSERT INTO `product_variant` (`id`, `product_id`, `color_id`, `size_id`, `quantity`) VALUES
+(1, 1, 4, 1, 50),
+(2, 1, 5, 2, 45),
+(3, 1, 6, 3, 30),
+(4, 2, 4, 2, 55),
+(5, 2, 2, 3, 40),
+(6, 3, 5, 3, 15),
+(7, 3, 6, 4, 10);
+
 -- --------------------------------------------------------
 
 --
@@ -227,6 +260,17 @@ CREATE TABLE `size` (
   `name` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `size`
+--
+
+INSERT INTO `size` (`id`, `name`) VALUES
+(1, 'S'),
+(2, 'M'),
+(3, 'L'),
+(4, 'XL'),
+(5, 'XXL');
 
 -- --------------------------------------------------------
 
@@ -243,6 +287,14 @@ CREATE TABLE `user` (
   `login_day` date NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `phone`, `login_day`) VALUES
+(1, 'Admin User', 'admin@example.com', '123456', '0123456789', '2025-11-26'),
+(2, 'Test User', 'test@example.com', '123456', '0987654321', '2025-11-25');
 
 -- --------------------------------------------------------
 
@@ -261,6 +313,14 @@ CREATE TABLE `voucher` (
   `status` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `voucher`
+--
+
+INSERT INTO `voucher` (`id`, `code`, `start`, `end`, `type`, `min`, `quantity`, `status`) VALUES
+(1, 'WELCOME10', '2025-11-01', '2025-12-01', 10, 500000, 100, 'active'),
+(2, 'SALE20', '2025-11-15', '2025-11-30', 20, 1000000, 50, 'active');
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -306,7 +366,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `color`
 --
 ALTER TABLE `color`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `comments`
@@ -324,31 +384,31 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `product_variant`
 --
 ALTER TABLE `product_variant`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `size`
 --
 ALTER TABLE `size`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `voucher`
 --
 ALTER TABLE `voucher`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
