@@ -3,9 +3,9 @@
 
 class Database {
     private $host = "localhost";
-    private $user = "thien";
+    private $user = "root";
     private $pass = ""; // Thay bằng mật khẩu CSDL của bạn
-    private $dbname = "ten_csdl_cua_ban"; // Thay bằng tên CSDL
+    private $dbname = "duan_1"; // Thay bằng tên CSDL
     public $conn;
 
     public function __construct() {
