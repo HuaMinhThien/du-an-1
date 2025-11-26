@@ -50,7 +50,7 @@ class ProductModel {
         // Lọc theo category_id và vẫn đổi tên cột img AS image
         $sql = "SELECT id, name, price, description, img AS image, category_id 
                 FROM products 
-                WHERE category_id = ?"; 
+                WHERE category_id = ?"; // ?: tham số đầu vào
         
         $stmt = $this->conn->prepare($sql);
         
@@ -83,7 +83,7 @@ class ProductModel {
         // Truy vấn lọc theo cả hai điều kiện
         $sql = "SELECT id, name, price, description, img AS image, category_id, gender_id 
                 FROM products 
-                WHERE category_id = ? AND gender_id = ?"; 
+                WHERE category_id = ? AND gender_id = ?"; // ?: tham số đầu vào
         
         $stmt = $this->conn->prepare($sql);
         
