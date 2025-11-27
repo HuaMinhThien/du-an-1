@@ -5,7 +5,7 @@
     </div>
 </div>
 
-<main class="store-page-content">
+<main class="store-page-content container-center">
     <div class="container">
         
         <div class="contact-banner">
