@@ -129,7 +129,7 @@
 
                     <p>MUA 2 SẢN PHẨM GIẢM 50%</p>
 
-                    <a href="#" class="main-ctn2-btn">Mua ngay</a>
+                    <a href="?page=products&category_id=5" class="main-ctn2-btn">Mua ngay</a>
 
                 </div>
 
