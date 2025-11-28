@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 28, 2025 lúc 02:23 PM
+-- Thời gian đã tạo: Th10 28, 2025 lúc 03:43 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -335,6 +335,7 @@ CREATE TABLE `user` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'user',
   `phone` varchar(15) NOT NULL,
   `login_day` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -343,10 +344,10 @@ CREATE TABLE `user` (
 -- Đang đổ dữ liệu cho bảng `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `phone`, `login_day`) VALUES
-(0, 'Guest User', 'guest@system.com', '', '', '2025-11-28 18:41:36'),
-(1, 'Admin User', 'admin@example.com', '123456', '0123456789', '2025-11-26 00:00:00'),
-(2, 'Test User', 'test@example.com', '123456', '0987654321', '2025-11-25 00:00:00');
+INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `phone`, `login_day`) VALUES
+(0, 'Guest User', 'guest@system.com', '', 'user', '', '2025-11-28 18:41:36'),
+(1, 'Admin User', 'admin@example.com', '123456', 'admin', '0123456789', '2025-11-26 00:00:00'),
+(2, 'Test User', 'test@example.com', '123456', 'user', '0987654321', '2025-11-25 00:00:00');
 
 -- --------------------------------------------------------
 
