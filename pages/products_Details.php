@@ -6,15 +6,13 @@ if (empty($product)) {
     return; 
 }
 
-// Giả định $product['image'] là 'img' và $product['image_child'] là 'img_child' 
-// đã được lấy từ Model
+// 🚨 ĐÃ SỬA: Đảm bảo $imagePath đã được Controller xác định (ví dụ: assets/images/ao/)
+
 $product_image = $product['image'] ?? 'default-main.jpg';
 $product_image_child = $product['image_child'] ?? 'default-child.jpg'; 
-// Dùng $product['description'] làm mô tả chi tiết nếu $product['description_full'] không có (vì đã sửa ở Model)
 $full_description = $product['description_full'] ?? $product['description'] ?? 'Chưa có mô tả chi tiết.';
 
-
-$available_sizes = ['S', 'M', 'L', 'XL'];
+// Biến $available_colors và $available_sizes giờ đây đã được Controller truyền sang.
 ?>
 
 <div class="product-detail-container">
@@ -23,20 +21,19 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
         
         <div class="product-thumbnails">
             <?php 
-            // Vòng lặp này hoạt động dựa trên mảng 'thumbnails' được tạo trong ProductModel
             foreach ($product['thumbnails'] as $thumb): 
             ?>
                 <div class="thumb-item">
                     <img class="thumb-image" 
-                         src="<?php echo $imagePath . htmlspecialchars($thumb); ?>" 
+                         src="<?php echo htmlspecialchars($imagePath . $thumb); ?>" 
                          alt="Thumbnail" 
-                         onclick="changeMainImage('<?php echo $imagePath . htmlspecialchars($thumb); ?>')">
+                         onclick="changeMainImage('<?php echo htmlspecialchars($imagePath . $thumb); ?>')">
                 </div>
             <?php endforeach; ?>
         </div>
         
         <div class="product-main-image">
-            <img id="main-product-image" src="<?php echo $imagePath . htmlspecialchars($product_image); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+            <img id="main-product-image" src="<?php echo htmlspecialchars($imagePath . $product_image); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
         </div>
         
         <div class="product-info-panel">
@@ -44,7 +41,6 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
             
             <div class="price-section">
                 <?php 
-                // Sử dụng 'sale_price' và 'price' đã được chuẩn hóa trong Model
                 $display_price = $product['price'] ?? 0;
                 $display_sale_price = $product['sale_price'] ?? $display_price;
                 ?>
@@ -56,40 +52,57 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
                 <?php endif; ?>
             </div>
             
-            <form action="index.php?page=cart&action=add" method="POST" class="add-to-cart-form">
-                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-
-                <div class="option-group color-options">
-                    <label>Màu sắc:</label>
-                    <div class="color-swatches">
-                        <span class="color-swatch active" style="background-color: #d1b59a;"></span>
-                        <span class="color-swatch" style="background-color: #000000;"></span>
-                        <span class="color-swatch" style="background-color: #ffffff; border: 1px solid #ccc;"></span>
-                    </div>
+            <form action="index.php?page=cart&action=add" method="POST">
+                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                <input type="hidden" name="action_type" value="add"> <div class="product-selection-group">
+                    <label for="color-select">Màu sắc:</label>
+                    <select name="color_id" id="color-select" required>
+                        <?php 
+                        // 🚨 SỬ DỤNG $available_colors ĐƯỢC TRUYỀN TỪ CONTROLLER
+                        if (empty($available_colors)):
+                        ?>
+                            <option value="">Không có màu</option>
+                        <?php
+                        else:
+                            foreach ($available_colors as $color): 
+                        ?>
+                            <option value="<?php echo $color['id']; ?>"><?php echo htmlspecialchars($color['name']); ?></option>
+                        <?php 
+                            endforeach;
+                        endif;
+                        ?>
+                    </select>
                 </div>
 
-                <div class="option-group size-options">
-                    <label for="size">Kích cỡ:</label>
-                    <div class="size-buttons">
-                        <?php foreach ($available_sizes as $size): ?>
-                            <input type="radio" id="size-<?php echo $size; ?>" name="size" value="<?php echo $size; ?>" required>
-                            <label for="size-<?php echo $size; ?>"><?php echo $size; ?></label>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                
-                <div class="option-group quantity-control">
-                    <label for="quantity">Số lượng:</label>
-                    <input type="number" name="quantity" id="quantity" value="1" min="1" max="99" required>
+                <div class="product-selection-group">
+                    <label for="size-select">Kích cỡ:</label>
+                    <select name="size_id" id="size-select" required>
+                        <?php 
+                        // 🚨 SỬ DỤNG $available_sizes ĐƯỢC TRUYỀN TỪ CONTROLLER
+                        if (empty($available_sizes)):
+                        ?>
+                             <option value="">Không có size</option>
+                        <?php
+                        else:
+                            foreach ($available_sizes as $size): 
+                        ?>
+                            <option value="<?php echo $size['id']; ?>"><?php echo htmlspecialchars($size['name']); ?></option>
+                        <?php 
+                            endforeach;
+                        endif;
+                        ?>
+                    </select>
                 </div>
 
-                <div class="action-buttons">
-                    <button type="submit" name="action" value="buy_now" class="btn-buy-now">MUA NGAY</button>
-                    <button type="submit" name="action" value="add_to_cart" class="btn-add-to-cart">THÊM VÀO GIỎ</button>
+                <div class="product-selection-group quantity-box">
+                    <label for="quantity-input">Số lượng:</label>
+                    <input type="number" name="quantity" id="quantity-input" value="1" min="1" max="99" required style="width: 60px;">
                 </div>
+
+                <button type="submit" class="btn-add-to-cart">
+                    <i class="fa fa-shopping-cart"></i> Thêm vào Giỏ hàng
+                </button>
             </form>
-            
-            
         </div>
     </div>
 
@@ -97,10 +110,9 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
         <h2>Mô tả chi tiết</h2>
         <p><?php echo nl2br(htmlspecialchars($full_description)); ?></p>
         
-
         <div class="description-images">
-             <img src="<?php echo $imagePath . htmlspecialchars($product_image); ?>" alt="Ảnh Sản Phẩm Chính">
-             <img src="<?php echo $imagePath . htmlspecialchars($product_image_child); ?>" alt="Ảnh Sản Phẩm Phụ">
+             <img src="<?php echo htmlspecialchars($imagePath . $product_image); ?>" alt="Ảnh Sản Phẩm Chính">
+             <img src="<?php echo htmlspecialchars($imagePath . $product_image_child); ?>" alt="Ảnh Sản Phẩm Phụ">
         </div>
     </div>
 
@@ -108,27 +120,32 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
         <h2>SẢN PHẨM LIÊN QUAN</h2>
         <div class="pro-section-2-box2" style="justify-content: center; gap: 2%;">
             <?php 
-            // Giả định $related_products được truyền từ Controller (chỉ cần lấy 4)
-            // Cần đảm bảo rằng $related_products đã được fetch và có dữ liệu
-            $imagePath = $imagePath ?? 'assets/images/'; // Giữ lại biến $imagePath đã được định nghĩa ở trên
             $count = 0;
             if (!empty($related_products) && is_array($related_products)):
-                foreach ($related_products as $product):
+                foreach ($related_products as $related_item): // Đổi tên biến tránh xung đột
                     if ($count >= 4) break; 
-                    // Tái tạo lại logic xác định $imagePath nếu cần (thường chỉ dùng $imagePath chung)
-                    // Ở đây dùng $imagePath đã có sẵn, giả định $product['image'] là tên file
+                    
+                    // 🚨 ĐÃ SỬA: Kiểm tra tồn tại và gán giá trị mặc định nếu không tồn tại
+                    $related_category_id = $related_item['category_id'] ?? 0; // Gán 0 nếu không có category_id
+                    
+                    $item_imagePath = 'assets/images/';
+                    if ($related_category_id == 1) { // 🚨 SỬ DỤNG BIẾN related_category_id ĐÃ KIỂM TRA
+                         $item_imagePath = 'assets/images/ao/';     
+                    } elseif ($related_category_id == 2) {
+                         $item_imagePath = 'assets/images/quan/'; 
+                    }
             ?>
             
-            <a href="?page=products_Details&id=<?php echo htmlspecialchars($product['id']); ?>" class="pro-section-2-boxSP" style="width: 23%; height: auto;">
-                <img src="<?php echo htmlspecialchars($imagePath . $product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"> 
+            <a href="?page=products_Details&id=<?php echo htmlspecialchars($related_item['id']); ?>" class="pro-section-2-boxSP" style="width: 23%; height: auto;">
+                <img src="<?php echo htmlspecialchars($item_imagePath . $related_item['image']); ?>" alt="<?php echo htmlspecialchars($related_item['name']); ?>"> 
 
                 <p class="pro-sec2-boxSP-name">
-                    <?php echo htmlspecialchars($product['name']); ?>
+                    <?php echo htmlspecialchars($related_item['name']); ?>
                 </p>
                 
                 <div class="pro-sec2-boxSP-miniBox">
                     <p>
-                        <?php echo number_format($product['price'], 0, ',', '.'); ?> ₫
+                        <?php echo number_format($related_item['price'], 0, ',', '.'); ?> ₫
                     </p>
 
                     <div class="pro-sec2-boxSP-icon">
@@ -152,7 +169,6 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
 <script>
     /**
      * Hàm thay đổi nguồn (src) của ảnh chính.
-     * @param {string} newSrc - Đường dẫn ảnh mới (từ thumbnail).
      */
     function changeMainImage(newSrc) {
         var mainImage = document.getElementById('main-product-image');
@@ -161,7 +177,6 @@ $available_sizes = ['S', 'M', 'L', 'XL'];
         }
     }
 
-    // Tùy chọn: Thêm hiệu ứng active cho thumbnail được chọn (nếu bạn có CSS)
     document.addEventListener('DOMContentLoaded', function() {
         var thumbnails = document.querySelectorAll('.thumb-image');
 

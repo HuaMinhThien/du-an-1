@@ -1,13 +1,12 @@
 <?php
 // File: /controller/CartController.php
 
-// 🚨 ĐÃ SỬA LỖI ĐƯỜNG DẪN BẰNG dirname(__DIR__)
 $root_path = dirname(__DIR__); 
 
+// SỬ DỤNG $root_path ĐỂ INCLUDE CÁC FILE KHÁC
 require_once($root_path . '/models/ProductModel.php'); 
 require_once($root_path . '/models/CartModels.php'); // Dùng tên file CartModels.php
-require_once($root_path . '/config/Database.php'); 
-
+require_once($root_path . '/config/Database.php'); // Giả định file config nằm trong /config/
 class CartController {
     private $productModel;
     private $cartModel; 
@@ -20,11 +19,13 @@ class CartController {
         }
         
         $this->db = (new Database())->getConnection(); 
+
         $this->productModel = new ProductModel($this->db);
         $this->cartModel = new CartModel($this->db); // Tên Class là CartModel
 
-        // 🚨 XÁC ĐỊNH USER ID: Lấy từ Session (nếu đăng nhập) hoặc đặt là 0
-        $this->userId = $_SESSION['user_id'] ?? 0; 
+        $this->userId = $_SESSION['user_id'] ?? 2; 
+    // Nếu bạn muốn test với ID 2, bạn nên chuyển nó về mặc định này trước khi deploy.
+    // $this->userId = 2; // XÓA HOẶC COMMENT DÒNG NÀY    
     }
 
     /**
@@ -37,70 +38,95 @@ class CartController {
         // KHÔNG unset ở đây nếu muốn Toast hiển thị. Đã unset trong header.php.
         // unset($_SESSION['success_message']); 
         // unset($_SESSION['error_message']); 
+        unset($_SESSION['success_message'], $_SESSION['error_message']); 
         
-        // 🚨 LẤY GIỎ HÀNG TỪ SQL
+        // 2. LẤY DỮ LIỆU GIỎ HÀNG DỰA TRÊN USER ID
         $cart_items = $this->cartModel->getCartItemsByUserId($this->userId);
         
+        // 3. Tính toán tổng tiền
+        $total_amount = 0;
+        foreach ($cart_items as $item) {
+            // Lưu ý: p.price là giá gốc của sản phẩm, cần tính thành tiền
+            $total_amount += $item['price'] * $item['quantity'];
+            
+            // Thêm trường 'sub_total' cho View dễ sử dụng
+            $item['sub_total'] = $item['price'] * $item['quantity'];
+        }
+
         // LẤY SẢN PHẨM GỢI Ý
         $suggested_products = $this->productModel->getFeaturedProductsRandom(4);
 
         include_once 'pages/cart.php';
+        // Bạn sẽ cần truyền các biến này đến View (ví dụ: $data['cart_items'] = $cart_items)
+        return ['cart_items' => $cart_items, 'total_amount' => $total_amount, 'user_id' => $this->userId, 'success_message' => $success_message, 'error_message' => $error_message];
     }
 
     /**
      * Xử lý hành động Thêm vào Giỏ (Add to Cart)
      */
-    public function add() {
+
+    public function handleRequest() {
+        $action = $_GET['action'] ?? 'index';
+
+        switch ($action) {
+            case 'index':
+                return $this->index(); // Trả về dữ liệu để router tải View
+            case 'add':
+                $this->add_to_cart();
+                break;
+            case 'remove':
+                $this->remove();
+                break;
+            case 'update':
+                $this->update_quantity();
+                break;
+            default:
+                // Xử lý lỗi hoặc gọi index
+                return $this->index(); 
+        }
+        return []; // Tránh lỗi nếu các action chuyển hướng
+    }
+    public function add_to_cart() {
         // 1. Lấy dữ liệu từ POST
         $product_id = $_POST['product_id'] ?? null;
-        $quantity = (int)($_POST['quantity'] ?? 1);
-        $size_id = $_POST['size_id'] ?? null; 
-        $color_id = $_POST['color_id'] ?? null; 
-        $action_type = $_POST['action'] ?? 'add_to_cart';
-        
+        $color_id = $_POST['color_id'] ?? 1; // Mặc định color_id=1 nếu không chọn
+        $size_id = $_POST['size_id'] ?? 1;   // Mặc định size_id=1 nếu không chọn
+        $quantity = (int)($_POST['quantity'] ?? 1); 
+
         // Lấy trang trước đó để chuyển hướng
         $referer = $_SERVER['HTTP_REFERER'] ?? 'index.php?page=products';
-        
-        // Kiểm tra tính hợp lệ cơ bản
-        if (!is_numeric($product_id) || !is_numeric($size_id) || !is_numeric($color_id) || $quantity <= 0) {
+
+        if (!is_numeric($product_id) || $quantity <= 0) {
             $_SESSION['error_message'] = 'Lỗi: Thông tin sản phẩm không hợp lệ.';
-            header('Location: ' . $referer); 
+            header('Location: ' . $referer);
             exit();
         }
 
-        // 2. Lấy thông tin sản phẩm và Variant ID
-        $product_details = $this->productModel->getProductDetails((int)$product_id);
-        $variant_id = $this->productModel->getVariantId((int)$product_id, (int)$color_id, (int)$size_id);
-        $variant_details = $this->productModel->getVariantDetails($variant_id);
+        // 2. Tìm Variant ID (ID của phiên bản sản phẩm)
+        // Đây là bước quan trọng để biết chính xác biến thể nào được mua
+        $variant_id = $this->productModel->getVariantId(
+            (int)$product_id, 
+            (int)$color_id, 
+            (int)$size_id
+        );
 
-        if (!$product_details || !$variant_id || !$variant_details) {
-            $_SESSION['error_message'] = 'Lỗi: Sản phẩm hoặc biến thể (Size/Color) không tồn tại.';
-            header('Location: ' . $referer); 
+        if (!$variant_id) {
+            $_SESSION['error_message'] = 'Lỗi: Không tìm thấy biến thể sản phẩm này trong kho.';
+            header('Location: ' . $referer);
             exit();
         }
 
-        $size_name = $variant_details['size_name'];
-        $color_name = $variant_details['color_name'];
-        
-        // 🚨 LƯU VÀO SQL
-        $save_result = $this->cartModel->saveItem($this->userId, $variant_id, $quantity);
-        
-        if (!$save_result) {
-            $_SESSION['error_message'] = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng (Lỗi SQL/Model).';
-            header('Location: ' . $referer); 
-            exit();
-        }
-        
-        // 4. Thiết lập thông báo thành công
-        $_SESSION['success_message'] = '🎉 Đã thêm sản phẩm "' . $product_details['name'] . ' - Màu: ' . $color_name . ' - Size: ' . $size_name . '" vào giỏ hàng thành công!';
+        // 3. Thêm/Cập nhật sản phẩm vào giỏ hàng qua CartModel
+        $add_result = $this->cartModel->addItem($this->userId, (int)$variant_id, $quantity);
 
-        // 5. Chuyển hướng sau khi xử lý
-        if ($action_type === 'buy_now') {
-            header('Location: index.php?page=checkout'); 
+        if ($add_result) {
+            $_SESSION['success_message'] = '✅ Đã thêm sản phẩm vào giỏ hàng thành công.';
         } else {
-            // 🚨 SỬA: Chuyển hướng quay lại trang cũ để hiển thị Toast
-            header('Location: ' . $referer); 
+            $_SESSION['error_message'] = 'Lỗi: Không thể thêm sản phẩm vào giỏ hàng (Lỗi SQL).';
         }
+
+        // 4. Chuyển hướng về trang giỏ hàng
+        header('Location: index.php?page=cart');
         exit();
     }
     

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 28, 2025 lúc 03:43 PM
+-- Thời gian đã tạo: Th10 28, 2025 lúc 07:33 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -49,6 +49,13 @@ CREATE TABLE `bill` (
   `total_pay` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `bill`
+--
+
+INSERT INTO `bill` (`id`, `user_id`, `voucher_id`, `order_date`, `status`, `total_pay`) VALUES
+(2, 2, 1, '2025-11-28 15:45:00', 'completed', 1197000);
+
 -- --------------------------------------------------------
 
 --
@@ -63,6 +70,14 @@ CREATE TABLE `billdetail` (
   `bill_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `billdetail`
+--
+
+INSERT INTO `billdetail` (`id`, `productVariant_id`, `quantity`, `current_price`, `bill_id`) VALUES
+(1, 4, 2, 390000, 2),
+(2, 7, 1, 550000, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -74,6 +89,13 @@ CREATE TABLE `cart` (
   `user_id` int(11) NOT NULL,
   `date_create` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `date_create`) VALUES
+(1, 2, '2025-11-28 23:00:00');
 
 -- --------------------------------------------------------
 
@@ -87,6 +109,16 @@ CREATE TABLE `cartdetail` (
   `productVariant_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cartdetail`
+--
+
+INSERT INTO `cartdetail` (`id`, `cart_id`, `productVariant_id`, `quantity`) VALUES
+(1, 1, 1, 5),
+(2, 1, 4, 1),
+(4, 1, 5, 12),
+(6, 1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -189,6 +221,13 @@ CREATE TABLE `payment` (
   `date` datetime NOT NULL,
   `price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `payment`
+--
+
+INSERT INTO `payment` (`id`, `bill_id`, `method`, `date`, `price`) VALUES
+(1, 2, 'Thanh toán online', '2025-11-28 15:50:00', 1197000);
 
 -- --------------------------------------------------------
 
@@ -406,6 +445,7 @@ ALTER TABLE `billdetail`
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_user_cart` (`user_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -413,6 +453,7 @@ ALTER TABLE `cart`
 --
 ALTER TABLE `cartdetail`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_cart_variant` (`cart_id`,`productVariant_id`),
   ADD KEY `cart_id` (`cart_id`),
   ADD KEY `productVariant_id` (`productVariant_id`);
 
@@ -498,25 +539,25 @@ ALTER TABLE `address`
 -- AUTO_INCREMENT cho bảng `bill`
 --
 ALTER TABLE `bill`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `billdetail`
 --
 ALTER TABLE `billdetail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `cartdetail`
 --
 ALTER TABLE `cartdetail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `category`
@@ -546,7 +587,7 @@ ALTER TABLE `gender`
 -- AUTO_INCREMENT cho bảng `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `products`

@@ -71,8 +71,6 @@ class ProductModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    // ... (các hàm lọc khác) ...
-
     // Hàm lấy chi tiết một sản phẩm 
     public function getProductDetails($id) {
         $sql = "SELECT id, name, price, description, 
@@ -93,17 +91,49 @@ class ProductModel {
         return $product;
     }
 
-    // Hàm lấy sản phẩm liên quan
-    public function getRelatedProducts($category_id, $current_product_id) {
-        $sql = "SELECT id, name, price, img AS image 
-             FROM products 
-             WHERE category_id = ? AND id != ?
-             ORDER BY id DESC
-             LIMIT 4"; 
-            
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$category_id, $current_product_id]);
+    public function getAvailableVariants($product_id) {
+        // Lấy tất cả Color ID và Size ID duy nhất cho sản phẩm này
+        $sql = "SELECT DISTINCT pv.color_id, c.name AS color_name, pv.size_id, s.name AS size_name
+                FROM product_variant pv
+                JOIN color c ON pv.color_id = c.id
+                JOIN size s ON pv.size_id = s.id
+                WHERE pv.product_id = :pid";
         
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':pid', $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $variants_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $colors = [];
+        $sizes = [];
+
+        // Tách dữ liệu thành 2 mảng riêng biệt (loại bỏ trùng lặp)
+        foreach ($variants_raw as $row) {
+            $colors[$row['color_id']] = ['id' => $row['color_id'], 'name' => $row['color_name']];
+            $sizes[$row['size_id']] = ['id' => $row['size_id'], 'name' => $row['size_name']];
+        }
+
+        return [
+            // Dùng array_values để trả về mảng index liên tục (0, 1, 2...)
+            'colors' => array_values($colors), 
+            'sizes' => array_values($sizes)
+        ];
+    }
+
+    // Hàm lấy sản phẩm liên quan
+    public function getRelatedProducts($category_id, $current_product_id, $limit = 4) {
+        $sql = "SELECT id, name, price, img AS image, category_id  -- 🚨 BỔ SUNG category_id VÀO ĐÂY
+                FROM products 
+                WHERE category_id = :category_id 
+                AND id != :current_product_id 
+                ORDER BY RAND() 
+                LIMIT :limit";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->bindParam(':current_product_id', $current_product_id, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
@@ -147,5 +177,46 @@ class ProductModel {
         $stmt->bindParam(':id', $variant_id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function getProductById($id) {
+    // Lấy thông tin sản phẩm chính và các ảnh con (nếu có)
+        $sql = "SELECT id, name, price, description, img AS image, img_child AS image_child, category_id, gender_id 
+                FROM products 
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Xử lý mảng ảnh con (tách chuỗi ảnh thành mảng thumbnails)
+        if ($product && !empty($product['image_child'])) {
+            $product['thumbnails'] = array_filter(explode(',', $product['image_child']));
+        } else {
+            $product['thumbnails'] = [];
+        }
+        
+        // Thêm ảnh chính vào đầu danh sách thumbnails (để hiển thị)
+        if ($product && !empty($product['image'])) {
+            array_unshift($product['thumbnails'], $product['image']);
+        }
+
+        return $product;
+    }
+        public function getProductVariants($product_id) {
+        $sql = "SELECT 
+                    pv.id AS variant_id,
+                    pv.size_id, s.name AS size_name,
+                    pv.color_id, c.name AS color_name,
+                    pv.quantity AS stock_quantity
+                FROM product_variant pv
+                JOIN size s ON pv.size_id = s.id
+                JOIN color c ON pv.color_id = c.id
+                WHERE pv.product_id = :product_id
+                ORDER BY pv.size_id, pv.color_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

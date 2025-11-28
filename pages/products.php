@@ -235,9 +235,7 @@
                 if (!empty($products) && is_array($products)): 
                     // Lặp qua từng sản phẩm trong mảng
                     foreach ($products as $product):
-                        // =========================================================
-                        // ✨ LOGIC ĐÃ SỬA: TẠO ĐƯỜNG DẪN ẢNH CHÍNH XÁC CHO TỪNG SẢN PHẨM
-                        // =========================================================
+                        
                         $productImagePath = 'assets/images/'; 
                         $product_cat_id = $product['category_id'] ?? 0;
 
