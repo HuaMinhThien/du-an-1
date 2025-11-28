@@ -1,84 +1,40 @@
 <?php
-// THÔNG TIN KẾT NỐI (Bạn có thể giữ phần này trong file riêng biệt hoặc đặt ở đây)
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "duan_1"; // Đảm bảo đúng tên database
+// File: models/ProductModel.php (Đã sửa lỗi và đồng bộ dùng PDO)
 
-// Hàm kết nối DB (ĐƯỢC GIỮ LẠI BÊN NGOÀI LỚP)
-function connect_db() {
-    global $servername, $username, $password, $dbname;
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    
-    if ($conn->connect_error) {
-        die("Kết nối database thất bại: " . $conn->connect_error);
-    }
-    $conn->set_charset("utf8"); 
-    return $conn;
-}
-
-// LỚP MODEL CHỨA CÁC PHƯƠNG THỨC LẤY DỮ LIỆU SẢN PHẨM
 class ProductModel {
-    private $conn;
+    private $db; 
 
-    public function __construct() {
-        // Tự động kết nối khi tạo Model
-        $this->conn = connect_db();
+    // CHÚ Ý: Class này PHẢI nhận kết nối PDO qua constructor
+    public function __construct($db_connection) {
+        $this->db = $db_connection; 
     }
 
-    // Lấy tất cả danh mục (Giữ nguyên)
+    // Lấy tất cả danh mục
     public function getAllCategories() {
         $sql = "SELECT id, name FROM category ORDER BY id ASC"; 
-        $result = $this->conn->query($sql);
-        
-        $categories = [];
-        
-        if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $categories[] = $row;
-            }
-        }
-        
-        return $categories;
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    // Lấy tất cả giới tính (Giữ nguyên)
+    // Lấy tất cả giới tính
     public function getAllGenders() {
         $sql = "SELECT id, name FROM gender ORDER BY id ASC"; 
-        $result = $this->conn->query($sql);
-        
-        $genders = [];
-        
-        if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $genders[] = $row;
-            }
-        }
-        
-        return $genders;
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Hàm lấy tất cả sản phẩm (Giữ nguyên)
+    // Hàm lấy tất cả sản phẩm
     public function getAllProducts() {
-        // img AS image để khớp với $product['image'] trong View
         $sql = "SELECT id, name, price, description, img AS image FROM products"; 
-        $result = $this->conn->query($sql);
-        
-        $products = [];
-        
-        if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $products[] = $row;
-            }
-        }
-        
-        return $products;
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    // HÀM LỌC TỔNG QUÁT (ĐÃ SỬA để nhận mảng category_ids)
+    // HÀM LỌC TỔNG QUÁT (Dùng PDO)
     public function getFilteredProducts($filters) {
-        // Giá trị mặc định
-        // Lấy 'category_ids' (dạng mảng) thay vì 'category_id' (dạng số)
         $category_ids = $filters['category_ids'] ?? null; 
         $gender_id = $filters['gender_id'] ?? null;
         $price_min = $filters['price_min'] ?? null;
@@ -86,173 +42,110 @@ class ProductModel {
 
         $sql = "SELECT id, name, price, description, img AS image, category_id, gender_id 
             FROM products 
-            WHERE 1=1"; // Bắt đầu bằng điều kiện luôn đúng
+            WHERE 1=1"; 
         
         $params = [];
-        $types = '';
 
-        // ✨ LOGIC MỚI: Xử lý mảng category_ids (Sử dụng điều kiện IN)
         if (!empty($category_ids) && is_array($category_ids)) {
-            // Tạo chuỗi placeholders (?, ?, ...) cho điều kiện IN
             $placeholders = implode(',', array_fill(0, count($category_ids), '?'));
             $sql .= " AND category_id IN ($placeholders)";
-            
-            // Thêm tất cả ID vào mảng tham số và 'i' (integer) vào chuỗi types
-            foreach ($category_ids as $id) {
-                $params[] = $id;
-                $types .= 'i';
-            }
+            $params = array_merge($params, $category_ids);
         } 
-        // Logic lọc Gender (Giữ nguyên)
+        
         if ($gender_id !== null) {
             $sql .= " AND gender_id = ?";
             $params[] = $gender_id;
-            $types .= 'i';
         }
 
-        // Logic lọc Price (Giữ nguyên)
         if ($price_min !== null && $price_max !== null) {
-            // Lưu ý: Lọc giá dựa trên cột 'price' duy nhất
             $sql .= " AND price >= ? AND price <= ?";
             $params[] = $price_min;
             $params[] = $price_max;
-            $types .= 'ii';
         }
         
         $sql .= " ORDER BY id DESC";
 
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params); 
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    // ... (các hàm lọc khác) ...
 
-        // BIND PARAMETERS
-        if (!empty($params)) {
-            $bind_params = array_merge([$types], $params);
-            $refs = [];
-            foreach($bind_params as $key => $value) {
-                $refs[$key] = &$bind_params[$key];
-            }
-            call_user_func_array([$stmt, 'bind_param'], $refs);
-        }
-        
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        $products = [];
-        
-        if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $products[] = $row;
-            }
-        }
-        
-        $stmt->close();
-        return $products;
-    }
-    
-    // Các hàm lọc cũ giờ được sửa để gọi hàm tổng quát với category_id là mảng 1 phần tử
-    public function getProductsByCategory($category_id) {
-        $filters = ['category_ids' => [(int)$category_id]];
-        return $this->getFilteredProducts($filters);
-    }
-    
-    public function getProductsByCategoryAndGender($category_id, $gender_id) {
-        $filters = ['category_ids' => [(int)$category_id], 'gender_id' => $gender_id];
-        return $this->getFilteredProducts($filters);
-    }
-    
-    public function getProductsByGender($gender_id) {
-        $filters = ['gender_id' => $gender_id];
-        // Lưu ý: Nếu không có category_id, $category_ids sẽ là null trong getFilteredProducts
-        return $this->getFilteredProducts($filters);
-    }
-
-    
-    // ============== HÀM SỬA LỖI CHO TRANG CHI TIẾT SẢN PHẨM (Giữ nguyên) ==============
-    
     // Hàm lấy chi tiết một sản phẩm 
     public function getProductDetails($id) {
         $sql = "SELECT id, name, price, description, 
-                img AS image, img_child AS image_child, category_id, gender_id 
-            FROM products 
-            WHERE id = ?";
+                 img AS image, img_child AS image_child, category_id, gender_id 
+             FROM products 
+             WHERE id = ?";
         
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $product = $result->fetch_assoc();
-        $stmt->close();
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Xử lý thumbnails (sử dụng ảnh chính và ảnh con)
         if ($product) {
-            // Giả định ảnh chính và ảnh con là 2 thumbnail
             $product['thumbnails'] = [$product['image'], $product['image_child'], $product['image']];
-            
-            // Do DB không có sale_price, description_full, chúng ta gán giá trị mặc định để tránh lỗi ở View
-            $product['sale_price'] = $product['price']; // Tạm thời dùng giá gốc
-            $product['description_full'] = $product['description']; // Dùng description làm full description
+            $product['sale_price'] = $product['price']; 
+            $product['description_full'] = $product['description']; 
         }
         
         return $product;
     }
 
-    // Hàm lấy sản phẩm liên quan (Giữ nguyên)
+    // Hàm lấy sản phẩm liên quan
     public function getRelatedProducts($category_id, $current_product_id) {
         $sql = "SELECT id, name, price, img AS image 
-            FROM products 
-            WHERE category_id = ? AND id != ?
-            ORDER BY id DESC
-            LIMIT 4"; // Giới hạn 4 sản phẩm
+             FROM products 
+             WHERE category_id = ? AND id != ?
+             ORDER BY id DESC
+             LIMIT 4"; 
             
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $category_id, $current_product_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$category_id, $current_product_id]);
         
-        $products = [];
-        if ($result) {
-            while($row = $result->fetch_assoc()) {
-                $products[] = $row;
-            }
-        }
-        
-        $stmt->close();
-        return $products;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    // HÀM MỚI ĐÃ THÊM: Lấy số lượng sản phẩm ngẫu nhiên (Giữ nguyên)
+    // Hàm lấy số lượng sản phẩm ngẫu nhiên
     public function getFeaturedProductsRandom($limit = 10) {
-        // Sắp xếp theo RAND() để lấy ngẫu nhiên, giới hạn $limit sản phẩm
-        // Lấy category_id để xác định thư mục ảnh trong View
         $sql = "SELECT id, name, price, img AS image, category_id
-                FROM products 
-                ORDER BY RAND() 
-                LIMIT ?"; 
+                 FROM products 
+                 ORDER BY RAND() 
+                 LIMIT ?"; 
         
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $limit);
+        $stmt = $this->db->prepare($sql);
+        
+        // 🚨 Sửa lỗi: Thay thế execute([$limit]) bằng bindParam để ép kiểu Integer cho LIMIT
+        $stmt->bindParam(1, $limit, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
         
-        $products = [];
-        
-        if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $products[] = $row;
-            }
-        }
-        
-        $stmt->close();
-        return $products;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    // =================================================================
-    
+    // Hàm lấy Variant ID
+    public function getVariantId($product_id, $color_id, $size_id) {
+        $sql = "SELECT id FROM product_variant 
+             WHERE product_id = :pid AND color_id = :cid AND size_id = :sid";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':pid', $product_id);
+        $stmt->bindParam(':cid', $color_id);
+        $stmt->bindParam(':sid', $size_id);
+        $stmt->execute();
+        return $stmt->fetchColumn(); 
+    }
 
-    // Đóng kết nối khi Model không còn được sử dụng
-    public function __destruct() {
-        if ($this->conn) {
-            $this->conn->close();
-        }
+    // Hàm lấy Variant Details
+    public function getVariantDetails($variant_id) {
+        $sql = "SELECT 
+             pv.quantity, s.name AS size_name, c.name AS color_name
+             FROM product_variant pv
+             JOIN size s ON pv.size_id = s.id
+             JOIN color c ON pv.color_id = c.id
+             WHERE pv.id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $variant_id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-?>

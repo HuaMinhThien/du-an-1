@@ -1,67 +1,67 @@
 <link rel="stylesheet" href="assets/css/home.css">
 <main class="container-center">
 
-    <?php 
-    // GIẢ ĐỊNH: Biến $random_products đã được Controller truyền sang và chứa TẤT CẢ các sản phẩm ngẫu nhiên (>= 20 SP)
+<?php 
+// GIẢ ĐỊNH: Biến $random_products đã được Controller truyền sang và chứa TẤT CẢ các sản phẩm ngẫu nhiên (>= 20 SP)
 
-    // Kiểm tra và đảm bảo rằng $random_products tồn tại, là mảng và có ít nhất 20 sản phẩm
-    if (!empty($random_products) && is_array($random_products)) {
-        
-        // Tách 10 sản phẩm đầu tiên cho Section 1
-        $section1_products = array_slice($random_products, 0, 10);
-        
-        // Tách 10 sản phẩm tiếp theo cho Section 2
-        // Bắt đầu từ index 10, lấy 10 phần tử
-        $section2_products = array_slice($random_products, 10, 10);
-        
-    } else {
-        // Nếu không có sản phẩm nào hoặc không phải là mảng
-        $section1_products = [];
-        $section2_products = [];
-    }
+// Kiểm tra và đảm bảo rằng $random_products tồn tại, là mảng và có ít nhất 20 sản phẩm
+if (!empty($random_products) && is_array($random_products)) {
+    
+    // Tách 10 sản phẩm đầu tiên cho Section 1
+    $section1_products = array_slice($random_products, 0, 10);
+    
+    // Tách 10 sản phẩm tiếp theo cho Section 2
+    // Bắt đầu từ index 10, lấy 10 phần tử
+    $section2_products = array_slice($random_products, 10, 10);
+    
+} else {
+    // Nếu không có sản phẩm nào hoặc không phải là mảng
+    $section1_products = [];
+    $section2_products = [];
+}
 
-    $imagePath = 'assets/images/'; 
-    ?>
+$imagePath = 'assets/images/'; 
+?>
 
-        <div class="main-container-banner">
+    <div class="main-container-banner">
 
-        <div class="slides">
+    <div class="slides">
 
-            <div class="slide active" style="background-image: url('assets/images/img-banner/banner-chinh-1.png');"></div>
+        <div class="slide active" style="background-image: url('assets/images/img-banner/banner-chinh-1.png');"></div>
 
-            <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-2.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-2.jpg');"></div>
 
-            <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-3.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-3.jpg');"></div>
 
-            <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-4.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-4.jpg');"></div>
 
-            <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-5.png');"></div>
-
-        </div>
-
-
-
-        <div class="prev">&#10094;</div>
-
-        <div class="next">&#10095;</div>
-
-
-
-        <div class="dots">
-
-            <span class="dot active"></span>
-
-            <span class="dot"></span>
-
-            <span class="dot"></span>
-
-            <span class="dot"></span>
-
-            <span class="dot"></span>
-
-        </div>
+        <div class="slide" style="background-image: url('assets/images/img-banner/banner-chinh-5.png');"></div>
 
     </div>
+
+
+
+    <div class="prev">&#10094;</div>
+
+    <div class="next">&#10095;</div>
+
+
+
+    <div class="dots">
+
+        <span class="dot active"></span>
+
+        <span class="dot"></span>
+
+        <span class="dot"></span>
+
+        <span class="dot"></span>
+
+        <span class="dot"></span>
+
+    </div>
+
+</div>
 
 
 
@@ -119,77 +119,77 @@
 
 
 
-            <div class="main-ctn2-grid-item main-ctn2-item-bag">
+        <div class="main-ctn2-grid-item main-ctn2-item-bag">
 
-                <img src="assets/images/img-banner/banner-con-1.png" alt="Túi xách">
+            <img src="assets/images/img-banner/banner-con-1.png" alt="Túi xách">
 
-                <div class="main-ctn2-content">
+            <div class="main-ctn2-content">
 
-                    <h3>Túi xách</h3>
+                <h3>Túi xách</h3>
 
-                    <p>MUA 2 SẢN PHẨM GIẢM 50%</p>
+                <p>MUA 2 SẢN PHẨM GIẢM 50%</p>
 
-                    <a href="?page=products&category_id=5" class="main-ctn2-btn">Mua ngay</a>
-
-                </div>
+                <a href="?page=products&category_id=5" class="main-ctn2-btn">Mua ngay</a>
 
             </div>
+
+        </div>
 
 
 
         <div class="main-ctn2-grid-item main-ctn2-item-man">
 
-                <img src="assets/images/img-banner/banner-con-2.png" alt="Thời trang nam">
+            <img src="assets/images/img-banner/banner-con-2.png" alt="Thời trang nam">
 
-                <div class="main-ctn2-content">
+            <div class="main-ctn2-content">
 
-                    <h3>Thời trang nam</h3>
+                <h3>Thời trang nam</h3>
 
-                    <p>XU HƯỚNG MỚI NHẤT<br>MÙA HÈ NÀY</p>
+                <p>XU HƯỚNG MỚI NHẤT<br>MÙA HÈ NÀY</p>
 
-                    <a href="?page=products&category_id=1&gender_id=1" class="main-ctn2-btn">Mua ngay</a>
-
-                </div>
+                <a href="?page=products&category_id=1&gender_id=1" class="main-ctn2-btn">Mua ngay</a>
 
             </div>
+
+        </div>
 
 
 
         <div class="main-ctn2-grid-item main-ctn2-item-woman">
 
-                <img src="assets/images/img-banner/banner-con-3.png" alt="Thời trang nữ">
+            <img src="assets/images/img-banner/banner-con-3.png" alt="Thời trang nữ">
 
-                <div class="main-ctn2-content">
+            <div class="main-ctn2-content">
 
-                    <h3>Thời trang nữ</h3>
+                <h3>Thời trang nữ</h3>
 
-                    <p>BỘ SƯU TẬP HÈ<br>MỚI NHẤT</p>
+                <p>BỘ SƯU TẬP HÈ<br>MỚI NHẤT</p>
 
-                    <a href="?page=products&category_id=1&gender_id=2" class="main-ctn2-btn">Mua ngay</a>
-
-                </div>
+                <a href="?page=products&category_id=1&gender_id=2" class="main-ctn2-btn">Mua ngay</a>
 
             </div>
-
-            <div class="main-ctn2-grid-item main-ctn2-item-kid">
-
-                    <img src="assets/images/img-banner/banner-con-4.png" alt="Cho bé">
-
-                    <div class="main-ctn2-content">
-
-                        <h3>Cho bé</h3>
-
-                        <p>THIẾT KẾ MỚI NHẤT<br>MÙA HÈ 2025</p>
-
-                        <a href="#" class="main-ctn2-btn">Mua ngayy</a>
-
-                    </div>
-
-            </div>
-
-
 
         </div>
+
+        <div class="main-ctn2-grid-item main-ctn2-item-kid">
+
+            <img src="assets/images/img-banner/banner-con-4.png" alt="Cho bé">
+
+            <div class="main-ctn2-content">
+
+                <h3>Cho bé</h3>
+
+                <p>THIẾT KẾ MỚI NHẤT<br>MÙA HÈ 2025</p>
+
+                <a href="#" class="main-ctn2-btn">Mua ngayy</a>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
 
     </div>
     
@@ -211,18 +211,19 @@
                 }
         ?>
         
-        <a href="?page=products_Details&id=<?php echo htmlspecialchars($product['id']); ?>" class="pro-section-2-boxSP" style="width: 100%; height: auto;">
-            
-            <div class="product-image-wrapper">
-                <img src="<?php echo htmlspecialchars($productImagePath . $product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"> 
-                
-                <div class="product-overlay">
-                    <span class="overlay-text">XEM CHI TIẾT</span>
+        <div class="pro-section-2-boxSP" style="width: 100%; height: auto;">
+             <a href="?page=products_Details&id=<?php echo htmlspecialchars($product['id']); ?>" class="product-link">
+                <div class="product-image-wrapper">
+                    <img src="<?php echo htmlspecialchars($productImagePath . $product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"> 
+                    
+                    <div class="product-overlay">
+                        <span class="overlay-text">XEM CHI TIẾT</span>
+                    </div>
                 </div>
-            </div>
-            <p class="pro-sec2-boxSP-name">
-                <?php echo htmlspecialchars($product['name']); ?>
-            </p>
+                <p class="pro-sec2-boxSP-name">
+                    <?php echo htmlspecialchars($product['name']); ?>
+                </p>
+            </a>
             
             <div class="pro-sec2-boxSP-miniBox">
                 <p>
@@ -231,10 +232,18 @@
 
                 <div class="pro-sec2-boxSP-icon">
                     <img src="assets/images/img-icon/heart.png" alt="Yêu thích">
-                    <img src="assets/images/img-icon/online-shopping.png" alt="Thêm vào giỏ">
+                    
+                    <form action="index.php?page=cart&action=add" method="POST" style="display: inline;">
+                        <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                        <input type="hidden" name="quantity" value="1">
+                        
+                        <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
+                            <img src="assets/images/img-icon/online-shopping.png" alt="Thêm vào giỏ">
+                        </button>
+                    </form>
                 </div>
             </div>
-        </a>
+        </div>
 
         <?php 
             endforeach; 
@@ -267,18 +276,19 @@
                 }
         ?>
         
-        <a href="?page=products_Details&id=<?php echo htmlspecialchars($product['id']); ?>" class="pro-section-2-boxSP" style="width: 100%; height: auto;">
-            
-            <div class="product-image-wrapper">
-                <img src="<?php echo htmlspecialchars($productImagePath . $product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"> 
-                
-                <div class="product-overlay">
-                    <span class="overlay-text">XEM CHI TIẾT</span>
+        <div class="pro-section-2-boxSP" style="width: 100%; height: auto;">
+             <a href="?page=products_Details&id=<?php echo htmlspecialchars($product['id']); ?>" class="product-link">
+                <div class="product-image-wrapper">
+                    <img src="<?php echo htmlspecialchars($productImagePath . $product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"> 
+                    
+                    <div class="product-overlay">
+                        <span class="overlay-text">XEM CHI TIẾT</span>
+                    </div>
                 </div>
-            </div>
-            <p class="pro-sec2-boxSP-name">
-                <?php echo htmlspecialchars($product['name']); ?>
-            </p>
+                <p class="pro-sec2-boxSP-name">
+                    <?php echo htmlspecialchars($product['name']); ?>
+                </p>
+            </a>
             
             <div class="pro-sec2-boxSP-miniBox">
                 <p>
@@ -287,10 +297,18 @@
 
                 <div class="pro-sec2-boxSP-icon">
                     <img src="assets/images/img-icon/heart.png" alt="Yêu thích">
-                    <img src="assets/images/img-icon/online-shopping.png" alt="Thêm vào giỏ">
+                    
+                    <form action="index.php?page=cart&action=add" method="POST" style="display: inline;">
+                        <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                        <input type="hidden" name="quantity" value="1">
+                        
+                        <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
+                            <img src="assets/images/img-icon/online-shopping.png" alt="Thêm vào giỏ">
+                        </button>
+                    </form>
                 </div>
             </div>
-        </a>
+        </div>
 
         <?php 
             endforeach; 
@@ -303,7 +321,7 @@
 
 
     <section class="danhmuc-sec-home">
-         <h2 class="section-title-highlight">Danh Mục Sản Phẩm</h2>
+           <h2 class="section-title-highlight">Danh Mục Sản Phẩm</h2>
 
         <div class="div-cate-home-box">
             <a class="cate-home-img" href="?page=products&category_id=1&gender_id=1">

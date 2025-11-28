@@ -1,27 +1,58 @@
 <?php
-    // Bỏ require 'controller/home-controller.php' ở đây
-    // index.php
-    
-    // Kéo header vào trước
-    include_once 'includes/header.php';
 
-    // KÉO VÀO SAU KHI CÓ HEADER
-    require 'controller/home-controller.php';
-    
-    // Tạo đối tượng Controller
-    $controller = new HomeController();
+// Bắt đầu Session cho tất cả các trang
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-    // Lấy tên trang (page)
-    $page = $_GET['page'] ?? 'home'; // Dùng toán tử null coalescing (PHP 7+) hoặc ternary operator
+// Kéo header vào trước
+include_once 'includes/header.php';
 
+// 1. Lấy tên trang (page)
+$page = $_GET['page'] ?? 'home'; 
+$action = $_GET['action'] ?? null; 
+
+$controller = null; // Khởi tạo biến Controller
+$controller_file = '';
+
+// =========================================================
+// 2. LOGIC ĐỊNH TUYẾN (Routing Logic)
+// =========================================================
+$controller = null; 
+$method_to_call = $page; 
+$controller_name = '';
+$controller_file = '';
+
+
+if ($page === 'cart') {
+    $controller_name = 'CartController';
+    $controller_file = 'controller/cart-controller.php'; 
+    $method_to_call = $action ?? 'index'; 
+
+} else {
+    $controller_name = 'HomeController';
+    $controller_file = 'controller/home-controller.php';
+    $method_to_call = $page; 
+}
+
+
+require $controller_file; 
+$controller = new $controller_name(); 
+
+
+// 4. Gọi phương thức
+if ($controller && method_exists($controller, $method_to_call)) {
     // Gọi phương thức tương ứng
-    if (method_exists($controller, $page)) {
-        $controller->$page();
-    } else {
-        // Xử lý trang 404 hoặc trang mặc định (home)
-        $controller->home(); 
+    $controller->$method_to_call();
+} else {
+    if (!($controller instanceof HomeController)) {
+        // Nếu chưa nạp HomeController, nạp nó vào
+        require 'controller/home-controller.php'; 
+        $controller = new HomeController();
     }
+    $controller->home(); 
+}
 
-    // Kéo footer vào
-    include_once 'includes/footer.php';
+// Kéo footer vào
+include_once 'includes/footer.php';
 ?>

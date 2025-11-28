@@ -1,0 +1,444 @@
+/* RESET & GLOBAL */
+body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.6;
+    font-size: 14px;
+}
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+h1, h2, h3 {
+    font-weight: 700;
+    color: #000;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+input, button, textarea {
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+/* Breadcrumb */
+.breadcrumb-bar {
+    padding: 15px 0;
+    font-size: 14px;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+.cart-page-container {
+    padding-bottom: 50px;
+}
+.cart-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+.cart-subtitle {
+    color: #777;
+    margin-bottom: 20px;
+}
+/* ======================================= */
+/* KHỐI CHÍNH */
+/* ======================================= */
+.cart-main-grid {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+.cart-items-list {
+    flex: 1; /* Chiếm phần lớn diện tích */
+}
+/* --- Chi tiết sản phẩm trong giỏ --- */
+.cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+    position: relative;
+}
+.item-img-wrap {
+    width: 100px;
+    height: 120px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+.item-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.item-details {
+    /* Đảm bảo item-details không chiếm quá nhiều chỗ */
+    flex-grow: 1; 
+    max-width: 300px; 
+    margin-right: 20px;
+}
+.item-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.item-variant {
+    font-size: 13px;
+    color: #777;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+.item-price-mobile {
+    display: none; /* Ẩn trên desktop */
+    font-weight: 700;
+    color: #000;
+}
+.item-actions {
+    /* Căn chỉnh lại để đẩy các khối số lượng/giá sang phải */
+    display: flex;
+    align-items: center;
+    flex-grow: 1; 
+    justify-content: flex-end; /* Đẩy nội dung sang phải */
+    gap: 30px; /* Tăng khoảng cách giữa các cột hành động */
+    padding-right: 30px; /* Thêm padding để không bị dính vào nút X */
+}
+.item-price {
+    font-size: 15px;
+    font-weight: 700;
+    width: 80px; /* Cố định chiều rộng cột giá */
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* Bộ đếm số lượng */
+.item-quantity {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 30px;
+    flex-shrink: 0;
+    width: 100px; /* Cố định chiều rộng cho khối số lượng */
+}
+.qty-btn {
+    background: #f7f7f7;
+    border: none;
+    width: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+    padding: 0;
+}
+.qty-btn:hover {
+    background: #e9e9e9;
+}
+.qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    outline: none;
+    padding: 0;
+}
+.item-remove {
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s;
+    position: absolute; /* Đặt nút X ở góc */
+    top: 25px; /* Điều chỉnh vị trí X */
+    right: 0;
+    font-size: 16px;
+}
+.item-remove:hover {
+    color: #dc3545;
+}
+
+/* --- Tóm tắt thanh toán --- */
+.cart-summary-box {
+    flex-basis: 300px; /* Cố định chiều rộng cột thanh toán */
+    flex-shrink: 0;
+    padding: 20px;
+    height: fit-content;
+    border: 1px solid #eee; /* Bổ sung border */
+    box-shadow: 0 0 5px rgba(0,0,0,0.05); /* Bổ sung shadow */
+}
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+.total-price {
+    color: #000; /* Đổi màu tổng tiền về đen */
+    font-weight: 700;
+}
+.btn-checkout {
+    width: 100%;
+    background: #0d1b2a; /* Màu xanh đậm */
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+.btn-checkout:hover {
+    background: #1c3d5e;
+}
+.btn-continue {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #0d1b2a;
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* ======================================= */
+/* KHỐI GHI CHÚ & CHÍNH SÁCH */
+/* ======================================= */
+.notes-policies-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+.notes-box, .policies-box {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.box-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+}
+.note-input {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    outline: none;
+}
+.policy-list {
+    list-style: none;
+    padding-left: 0;
+    font-size: 13px;
+    margin: 0;
+}
+.policy-list li {
+    margin-bottom: 8px;
+    padding-left: 10px;
+    position: relative;
+}
+.policy-list li::before {
+    content: '-';
+    position: absolute;
+    left: 0;
+    color: #0d1b2a;
+    font-weight: 700;
+}
+
+/* ======================================= */
+/* KHỐI XUẤT HÓA ĐƠN */
+/* ======================================= */
+.invoice-section {
+    margin-bottom: 40px;
+}
+.invoice-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.radio-circle {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.invoice-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+.invoice-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+}
+.invoice-form .form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.btn-invoice {
+    background: #0d1b2a;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+.btn-invoice:hover {
+    background: #1c3d5e;
+}
+
+/* ======================================= */
+/* SẢN PHẨM GỢI Ý (Đã điều chỉnh theo trang chi tiết) */
+/* ======================================= */
+.suggested-products-section h2 {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ccc;
+    display: block;
+    width: fit-content; 
+    margin: 0 auto 30px auto; 
+}
+
+/* 🚨 Class mới: pro-section-2-box2 (Grid Container) */
+.pro-section-2-box2 {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2%; /* Khoảng cách giữa các cột */
+}
+
+/* 🚨 Class mới: pro-section-2-boxSP (Item) */
+.pro-section-2-boxSP {
+    width: 23%; /* Đảm bảo 4 cột */
+    height: auto;
+    text-align: center;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.pro-section-2-boxSP img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* 🚨 Class mới: pro-sec2-boxSP-name (Tên sản phẩm) */
+.pro-sec2-boxSP-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 5px 0;
+    line-height: 1.3;
+}
+
+/* 🚨 Class mới: pro-sec2-boxSP-miniBox (Hộp giá và icon) */
+.pro-sec2-boxSP-miniBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.pro-sec2-boxSP-miniBox p {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+/* 🚨 Class mới: pro-sec2-boxSP-icon */
+.pro-sec2-boxSP-icon img {
+    width: 18px; /* Kích thước icon nhỏ hơn */
+    height: 18px;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+
+/* ======================================= */
+/* RESPONSIVE */
+/* ======================================= */
+@media (max-width: 992px) {
+    .cart-main-grid {
+        flex-direction: column;
+    }
+    .cart-summary-box {
+        flex-basis: auto;
+        width: 100%;
+        order: -1; /* Đưa khối Summary lên đầu */
+    }
+    
+    /* 🚨 SỬA LẠI MOBILE VIEW: Chuyển item-actions thành column để hiển thị dọc */
+    .cart-item {
+        align-items: flex-start; 
+    }
+    .item-actions {
+        flex-grow: 0; 
+        justify-content: flex-start;
+        gap: 15px;
+        padding-right: 0;
+        flex-direction: column; /* Chuyển sang hiển thị dọc */
+        align-items: flex-end; /* Căn phải các control */
+    }
+    
+    .item-price {
+        display: none; /* Ẩn giá ở cột riêng trên mobile */
+    }
+    .item-quantity {
+        margin-left: 0; /* Bỏ margin auto */
+    }
+    .item-remove {
+        position: static; /* Bỏ position absolute */
+        order: -1; /* Đưa nút X lên đầu khối actions */
+    }
+    .item-details {
+        flex-grow: 1;
+        max-width: none;
+        margin-right: 15px;
+    }
+    .item-price-mobile {
+        display: block; /* Hiện giá ở cột Details trên mobile */
+        margin-top: 5px;
+    }
+    
+    .notes-policies-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* 🚨 RESPONSIVE CHO KHỐI GỢI Ý MỚI */
+    .pro-section-2-box2 {
+        gap: 4%;
+    }
+    .pro-section-2-boxSP {
+        width: 48%; /* 2 cột */
+    }
+    
+    .invoice-form .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .invoice-form input {
+        margin-bottom: 10px;
+    }
+}
+@media (max-width: 576px) {
+    /* 🚨 RESPONSIVE CHO KHỐI GỢI Ý MỚI */
+    .pro-section-2-boxSP {
+        width: 100%; /* 1 cột */
+    }
+}

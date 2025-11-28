@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="ft-sec-2">
-                    <h2 class="ft-sec2-tittle font16">PHƯƠNG THỨC THANH TOÁN </h2>
+                    <h2 style="color: #FDFACF" class="ft-sec2-tittle font16">PHƯƠNG THỨC THANH TOÁN </h2>
 
                     <div class="ft-sec2-container-icon">
                         <div class="ft-sec2-icon"><img src="assets/images/img-icon/apple-pay.png" alt=""></div>
@@ -43,7 +43,7 @@
             </div>
             <div class="ft-col">
                 <div class="ft-sec-3">
-                    <h2 class="ft-sec3-tittle font16">CÔNG TY  </h2>
+                    <h2 style="color: #FDFACF" class="ft-sec3-tittle font16">CÔNG TY  </h2>
 
                     <div class="ft-container-sec3">
                         <a href="?page=about">
@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="ft-sec-4">
-                    <h2 class="ft-sec4-tittle font16">ĐỐI TÁC VẬN CHUYỂN</h2>
+                    <h2 style="color: #FDFACF" class="ft-sec4-tittle font16">ĐỐI TÁC VẬN CHUYỂN</h2>
 
                     <div class="ft-sec2-container-icon">
                         <div class="ft-sec2-icon"><img src="assets/images/img-icon/gh1.png" alt=""></div>
@@ -86,7 +86,7 @@
             </div>
 
             <div class="ft-col">
-                <h2 class="ft-sec3-tittle font16">CHÍNH SÁCH  </h2>
+                <h2 style="color: #FDFACF" class="ft-sec3-tittle font16">CHÍNH SÁCH  </h2>
 
                     <div class="ft-container-sec3">
                         <a href="?page=#">
@@ -111,7 +111,7 @@
                         
                     </div>
 
-                    <h2 class="ft-sec5-tittle font16">LIÊN HỆ VỚI CHÚNG TÔI</h2>
+                    <h2 style="color: #FDFACF" class="ft-sec5-tittle font16">LIÊN HỆ VỚI CHÚNG TÔI</h2>
 
                     <input type="text" class="ft-input-email" placeholder="Nhập email của bạn">
 
