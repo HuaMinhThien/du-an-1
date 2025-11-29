@@ -26,20 +26,8 @@
     <div class="cart-content container">
         
         <?php 
-            // 🚨 BỔ SUNG: HÀM XỬ LÝ LẤY TIỀN TỐ THƯ MỤC
-            function getFolderPrefix($category_id) {
-                switch ((int)$category_id) {
-                    case 1:
-                        return 'ao/'; 
-                    case 2:
-                        return 'quan/';
-                    case 3:
-                        return 'phu_kien/';
-                    default:
-                        return ''; // Mặc định nếu không có category_id
-                }
-            }
-        
+            // 🚨 ĐÃ SỬA: XÓA HÀM getFolderPrefix VÀ LOGIC TIỀN TỐ THƯ MỤC (ao/, quan/)
+            
             $total_items = count($cart_items ?? []); // Đảm bảo $cart_items là mảng
             $grand_total = 0;
         ?>
@@ -71,10 +59,8 @@
                         // Tạo key duy nhất để xóa hoặc cập nhật: (Variant ID hoặc key Session)
                         $unique_key = $item['variant_id'] ?? $product_id . '_' . $item_size . '_' . $item_color; 
 
-                        // 🚨 ĐÃ SỬA: Xử lý đường dẫn ảnh từ Session
-                        $item_category_id = $item['category_id'] ?? 0;
-                        $folder_prefix = getFolderPrefix($item_category_id);
-                        $item_image = 'assets/images/' . $folder_prefix . htmlspecialchars($item['image'] ?? 'default.jpg'); 
+                        // 🚨 ĐÃ SỬA: Đường dẫn ảnh cố định, không dùng tiền tố ao/ quan/
+                        $item_image = 'assets/images/sanpham/' . htmlspecialchars($item['image'] ?? 'default.jpg'); 
                     ?>
                         <div class="cart-item">
                             <div class="item-img-wrap">
@@ -161,10 +147,8 @@
                             $s_final_price = $suggested_product['sale_price'] ?? $suggested_product['price'];
                             $s_price_formatted = number_format($s_final_price, 0, ',', '.');
                             
-                            // 🚨 ĐÃ SỬA: BỎ LOGIC XÁC ĐỊNH FOLDER (ao/ quan/...)
-                            // Chỉ sử dụng đường dẫn cố định 'assets/images/' + tên file ảnh
                             $s_image_file = htmlspecialchars($suggested_product['image'] ?? 'default.jpg');
-                            $s_image = 'assets/images/' . $s_image_file;
+                            $s_image = 'assets/images/sanpham/' . $s_image_file;
                         ?>
                             <a href="index.php?page=products_Details&id=<?php echo $s_id; ?>" class="pro-section-2-boxSP">
                                 <img src="<?php echo $s_image; ?>" alt="<?php echo $s_name; ?>"> 

@@ -236,16 +236,10 @@
                     // Lặp qua từng sản phẩm trong mảng
                     foreach ($products as $product):
                         
-                        $productImagePath = 'assets/images/'; 
-                        $product_cat_id = $product['category_id'] ?? 0;
-
-                        if ($product_cat_id == 1) {
-                            $productImagePath .= 'ao/'; 
-                        } elseif ($product_cat_id == 2) {
-                            $productImagePath .= 'quan/'; 
-                        } 
-                        // Nếu category_id khác 1 và 2, đường dẫn là 'assets/images/'
-
+                        // SỬA: Đảm bảo đường dẫn luôn là 'assets/images/' 
+                        // Bỏ logic kiểm tra category_id và thêm subfolder 'ao/'/'quan/'
+                        $productImagePath = 'assets/images/sanpham/'; 
+                        
                 ?>
                 
                 <div class="pro-section-2-boxSP">
