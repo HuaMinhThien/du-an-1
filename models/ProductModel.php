@@ -1,10 +1,9 @@
 <?php
-// File: models/ProductModel.php (Đã sửa lỗi và đồng bộ dùng PDO)
+// File: models/ProductModel.php (Đã bổ sung đầy đủ chức năng)
 
 class ProductModel {
     private $db; 
 
-    // CHÚ Ý: Class này PHẢI nhận kết nối PDO qua constructor
     public function __construct($db_connection) {
         $this->db = $db_connection; 
     }
@@ -25,52 +24,44 @@ class ProductModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Hàm lấy tất cả sản phẩm
+    // Hàm lấy tất cả sản phẩm với đầy đủ thông tin
     public function getAllProducts() {
-        $sql = "SELECT id, name, price, description, img AS image FROM products"; 
+        $sql = "SELECT p.id, p.name, p.price, p.storage, p.description, p.category_id, p.id_gender, p.img, p.img_child,
+                       c.name AS category_name,
+                       g.name AS gender_name
+                FROM products p
+                LEFT JOIN category c ON p.category_id = c.id
+                LEFT JOIN gender g ON p.id_gender = g.id
+                ORDER BY p.id ASC"; 
+        
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    // HÀM LỌC TỔNG QUÁT (Dùng PDO)
-    public function getFilteredProducts($filters) {
-        $category_ids = $filters['category_ids'] ?? null; 
-        $gender_id = $filters['gender_id'] ?? null;
-        $price_min = $filters['price_min'] ?? null;
-        $price_max = $filters['price_max'] ?? null;
 
-        $sql = "SELECT id, name, price, description, img AS image, category_id, gender_id 
-            FROM products 
-            WHERE 1=1"; 
-        
-        $params = [];
-
-        if (!empty($category_ids) && is_array($category_ids)) {
-            $placeholders = implode(',', array_fill(0, count($category_ids), '?'));
-            $sql .= " AND category_id IN ($placeholders)";
-            $params = array_merge($params, $category_ids);
-        } 
-        
-        if ($gender_id !== null) {
-            $sql .= " AND gender_id = ?";
-            $params[] = $gender_id;
-        }
-
-        if ($price_min !== null && $price_max !== null) {
-            $sql .= " AND price >= ? AND price <= ?";
-            $params[] = $price_min;
-            $params[] = $price_max;
-        }
-        
-        $sql .= " ORDER BY id DESC";
-
+    // Lấy thông tin sản phẩm với hình ảnh
+    public function getProductWithImages($id) {
+        $sql = "SELECT p.*, c.name as category_name, g.name as gender_name 
+                FROM products p 
+                LEFT JOIN category c ON p.category_id = c.id 
+                LEFT JOIN gender g ON p.id_gender = g.id 
+                WHERE p.id = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($params); 
+        $stmt->execute([$id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($product) {
+            // Xử lý hình ảnh phụ (nếu có)
+            if (!empty($product['img_child'])) {
+                $product['sub_images'] = array_filter(explode(',', $product['img_child']));
+            } else {
+                $product['sub_images'] = [];
+            }
+        }
+        
+        return $product;
     }
-    
+
     // Hàm lấy chi tiết một sản phẩm 
     public function getProductDetails($id) {
         $sql = "SELECT id, name, price, description, 
@@ -92,7 +83,6 @@ class ProductModel {
     }
 
     public function getAvailableVariants($product_id) {
-        // Lấy tất cả Color ID và Size ID duy nhất cho sản phẩm này
         $sql = "SELECT DISTINCT pv.color_id, c.name AS color_name, pv.size_id, s.name AS size_name
                 FROM product_variant pv
                 JOIN color c ON pv.color_id = c.id
@@ -107,14 +97,12 @@ class ProductModel {
         $colors = [];
         $sizes = [];
 
-        // Tách dữ liệu thành 2 mảng riêng biệt (loại bỏ trùng lặp)
         foreach ($variants_raw as $row) {
             $colors[$row['color_id']] = ['id' => $row['color_id'], 'name' => $row['color_name']];
             $sizes[$row['size_id']] = ['id' => $row['size_id'], 'name' => $row['size_name']];
         }
 
         return [
-            // Dùng array_values để trả về mảng index liên tục (0, 1, 2...)
             'colors' => array_values($colors), 
             'sizes' => array_values($sizes)
         ];
@@ -122,7 +110,7 @@ class ProductModel {
 
     // Hàm lấy sản phẩm liên quan
     public function getRelatedProducts($category_id, $current_product_id, $limit = 4) {
-        $sql = "SELECT id, name, price, img AS image, category_id  -- 🚨 BỔ SUNG category_id VÀO ĐÂY
+        $sql = "SELECT id, name, price, img AS image, category_id
                 FROM products 
                 WHERE category_id = :category_id 
                 AND id != :current_product_id 
@@ -145,8 +133,6 @@ class ProductModel {
                  LIMIT ?"; 
         
         $stmt = $this->db->prepare($sql);
-        
-        // 🚨 Sửa lỗi: Thay thế execute([$limit]) bằng bindParam để ép kiểu Integer cho LIMIT
         $stmt->bindParam(1, $limit, PDO::PARAM_INT);
         $stmt->execute();
         
@@ -178,31 +164,12 @@ class ProductModel {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     public function getProductById($id) {
-    // Lấy thông tin sản phẩm chính và các ảnh con (nếu có)
-        $sql = "SELECT id, name, price, description, img AS image, img_child AS image_child, category_id, gender_id 
-                FROM products 
-                WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Xử lý mảng ảnh con (tách chuỗi ảnh thành mảng thumbnails)
-        if ($product && !empty($product['image_child'])) {
-            $product['thumbnails'] = array_filter(explode(',', $product['image_child']));
-        } else {
-            $product['thumbnails'] = [];
-        }
-        
-        // Thêm ảnh chính vào đầu danh sách thumbnails (để hiển thị)
-        if ($product && !empty($product['image'])) {
-            array_unshift($product['thumbnails'], $product['image']);
-        }
-
-        return $product;
+        return $this->getProductWithImages($id);
     }
-        public function getProductVariants($product_id) {
+
+    public function getProductVariants($product_id) {
         $sql = "SELECT 
                     pv.id AS variant_id,
                     pv.size_id, s.name AS size_name,
@@ -216,6 +183,89 @@ class ProductModel {
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // =================================================================
+    // PHẦN 2: CÁC HÀM CUD (CREATE - UPDATE - DELETE) CHO ADMIN
+    // =================================================================
+
+    // Hàm insert với upload ảnh
+    public function insert($data) {
+        $sql = "INSERT INTO products (name, price, storage, description, category_id, id_gender, img, img_child) 
+                VALUES (:name, :price, :storage, :description, :category_id, :id_gender, :img, :img_child)";
+        
+        $stmt = $this->db->prepare($sql);
+
+        $name = htmlspecialchars(strip_tags($data['name']));
+        $description = htmlspecialchars(strip_tags($data['description']));
+        
+        // Xử lý hình ảnh
+        $main_image = $data['main_image'] ?? 'default.jpg';
+        $sub_images = $data['sub_images'] ?? '';
+
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':price', $data['price']);
+        $stmt->bindParam(':storage', $data['storage']);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':category_id', $data['category_id']);
+        $stmt->bindParam(':id_gender', $data['id_gender']);
+        $stmt->bindParam(':img', $main_image);
+        $stmt->bindParam(':img_child', $sub_images);
+
+        return $stmt->execute();
+    }
+
+    // Hàm update với upload ảnh
+    public function update($data) {
+        $sql = "UPDATE products 
+                SET name = :name, price = :price, storage = :storage, description = :description, 
+                    category_id = :category_id, id_gender = :id_gender, img = :img, img_child = :img_child
+                WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+
+        $name = htmlspecialchars(strip_tags($data['name']));
+        $description = htmlspecialchars(strip_tags($data['description']));
+
+        // Xử lý hình ảnh
+        $main_image = $data['main_image'] ?? ($data['current_main_image'] ?? 'default.jpg');
+        $sub_images = $data['sub_images'] ?? ($data['current_sub_images'] ?? '');
+
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':price', $data['price']);
+        $stmt->bindParam(':storage', $data['storage']);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':category_id', $data['category_id']);
+        $stmt->bindParam(':id_gender', $data['id_gender']);
+        $stmt->bindParam(':img', $main_image);
+        $stmt->bindParam(':img_child', $sub_images);
+        $stmt->bindParam(':id', $data['id']);
+
+        return $stmt->execute();
+    }
+
+    // Xóa sản phẩm
+    public function delete($id) {
+        $sql = "DELETE FROM products WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    // Lấy tất cả màu sắc
+    public function getAllColors() {
+        $sql = "SELECT id, name FROM color ORDER BY id ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy tất cả kích thước
+    public function getAllSizes() {
+        $sql = "SELECT id, name FROM size ORDER BY id ASC";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
