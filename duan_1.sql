@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: localhost
--- Thời gian đã tạo: Th12 01, 2025 lúc 05:05 PM
--- Phiên bản máy phục vụ: 10.4.28-MariaDB
--- Phiên bản PHP: 8.1.17
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th12 01, 2025 lúc 05:11 PM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1310,10 +1310,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `phone`, `dob`, `gender`, `login_day`) VALUES
-(0, 'Guest User', 'guest@system.com', '', 'user', '', NULL, NULL, '2025-11-28 18:41:36'),
 (1, 'Admin User', 'admin@gmail.com', '123456', 'admin', '0123456789', NULL, NULL, '2025-11-26 00:00:00'),
 (2, 'Test User', 'test@example.com', '123456', 'user', '0987654321', NULL, NULL, '2025-11-25 00:00:00'),
-(3, 'Liêm Trần', 'liemtran3107@gmail.com', '123', 'user', '', NULL, NULL, '2025-12-01 16:53:27');
+(3, 'Liêm Trần', 'liemtran3107@gmail.com', '123', 'user', '', NULL, NULL, '2025-12-01 16:53:27'),
+(4, 'Guest User', 'guest@system.com', '', 'user', '', NULL, NULL, '2025-12-01 23:10:28');
 
 -- --------------------------------------------------------
 
@@ -1533,6 +1533,12 @@ ALTER TABLE `product_variant`
 --
 ALTER TABLE `size`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `voucher`
