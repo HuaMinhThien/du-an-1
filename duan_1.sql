@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 01, 2025 lúc 12:17 PM
+-- Thời gian đã tạo: Th12 01, 2025 lúc 03:53 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -54,7 +54,9 @@ CREATE TABLE `bill` (
 --
 
 INSERT INTO `bill` (`id`, `user_id`, `voucher_id`, `order_date`, `status`, `total_pay`) VALUES
-(2, 2, 1, '2025-11-28 15:45:00', 'completed', 1197000);
+(2, 2, 1, '2025-11-28 15:45:00', 'completed', 1197000),
+(3, 2, NULL, '2025-12-01 20:52:07', 'pending', 1100000),
+(4, 2, NULL, '2025-12-01 20:57:12', 'pending', 2640000);
 
 -- --------------------------------------------------------
 
@@ -76,7 +78,11 @@ CREATE TABLE `billdetail` (
 
 INSERT INTO `billdetail` (`id`, `productVariant_id`, `quantity`, `current_price`, `bill_id`) VALUES
 (1, 4, 2, 390000, 2),
-(2, 7, 1, 550000, 2);
+(2, 7, 1, 550000, 2),
+(3, 45, 2, 0, 3),
+(4, 679, 1, 0, 4),
+(5, 196, 2, 0, 4),
+(6, 496, 1, 0, 4);
 
 -- --------------------------------------------------------
 
@@ -116,9 +122,10 @@ CREATE TABLE `cartdetail` (
 --
 
 INSERT INTO `cartdetail` (`id`, `cart_id`, `productVariant_id`, `quantity`) VALUES
-(8, 1, 45, 2),
 (22, 2, 211, 1),
-(25, 2, 514, 1);
+(25, 2, 514, 1),
+(26, 2, 529, 1),
+(30, 1, 679, 1);
 
 -- --------------------------------------------------------
 
@@ -143,7 +150,7 @@ INSERT INTO `category` (`id`, `name`) VALUES
 (5, 'Túi'),
 (6, 'Vớ'),
 (7, 'Balo'),
-(8, '[ẨN] Ví');
+(8, 'Ví');
 
 -- --------------------------------------------------------
 
@@ -1456,13 +1463,13 @@ ALTER TABLE `address`
 -- AUTO_INCREMENT cho bảng `bill`
 --
 ALTER TABLE `bill`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `billdetail`
 --
 ALTER TABLE `billdetail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `cart`
@@ -1474,13 +1481,13 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT cho bảng `cartdetail`
 --
 ALTER TABLE `cartdetail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT cho bảng `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `color`
