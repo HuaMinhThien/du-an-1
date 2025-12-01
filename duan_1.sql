@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 01, 2025 lúc 05:11 PM
+-- Thời gian đã tạo: Th12 01, 2025 lúc 05:29 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -1309,19 +1309,11 @@ CREATE TABLE `user` (
 -- Đang đổ dữ liệu cho bảng `user`
 --
 
-<<<<<<< HEAD
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `phone`, `dob`, `gender`, `login_day`) VALUES
 (1, 'Admin User', 'admin@gmail.com', '123456', 'admin', '0123456789', NULL, NULL, '2025-11-26 00:00:00'),
 (2, 'Test User', 'test@example.com', '123456', 'user', '0987654321', NULL, NULL, '2025-11-25 00:00:00'),
 (3, 'Liêm Trần', 'liemtran3107@gmail.com', '123', 'user', '', NULL, NULL, '2025-12-01 16:53:27'),
-(4, 'Guest User', 'guest@system.com', '', 'user', '', NULL, NULL, '2025-12-01 23:10:28');
-=======
-INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `phone`, `login_day`) VALUES
-(0, 'Guest User', 'guest@system.com', '', 'user', '', '2025-11-28 18:41:36'),
-(1, 'Admin User', 'admin@gmail.com', '123456', 'admin', '0123456789', '2025-11-26 00:00:00'),
-(2, 'Test User', 'test@example.com', '123456', 'user', '0987654321', '2025-11-25 00:00:00'),
-(3, 'Liêm Trần', 'liemtran3107@gmail.com', '123', 'user', '0987654321', '2025-11-25 00:00:00');
->>>>>>> ac3bc20c008d011c780ffdfecc01955d8337c119
+(5, 'Hứa Minh Thiên', 'thien@gmail.com', '123456', 'user', '0906761390', '2006-12-04', 1, '2025-12-01 23:19:15');
 
 -- --------------------------------------------------------
 
@@ -1546,7 +1538,7 @@ ALTER TABLE `size`
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `voucher`
