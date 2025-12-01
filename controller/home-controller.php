@@ -214,67 +214,62 @@ class HomeController {
     }
 
 
-    public function register() {
-        $error_message = '';
-        $success_message = '';
+   // Thay thế hoàn toàn hàm register() trong HomeController bằng đoạn này:
+
+public function register() {
+    $error_message = '';
+    $success_message = '';
+    
+    // Dữ liệu giữ lại khi nhập sai
+    $input_data = [
+        'name' => $_POST['name'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'phone' => $_POST['phone'] ?? '',
+        'dob' => $_POST['dob'] ?? '',
+        'gender' => $_POST['gender'] ?? ''
+    ];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
-        // Dữ liệu người dùng nhập (được giữ lại khi form thất bại)
-        $input_data = [
-            'name' => '',
-            'email' => '',
-            'phone_number' => '',
-            'dob' => '',
-            'gender' => ''
-        ];
+        // Lấy và làm sạch dữ liệu
+        $name     = trim($input_data['name']);
+        $email    = trim($input_data['email']);
+        $phone    = trim($input_data['phone']);
+        $dob      = $input_data['dob'];
+        $gender   = $input_data['gender']; // 0 = Nữ, 1 = Nam
+        $password = $_POST['password'] ?? '';
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
-            // 1. Lấy và làm sạch dữ liệu
-            $input_data['name'] = trim($_POST['name'] ?? '');
-            $input_data['email'] = trim($_POST['email'] ?? '');
-            $input_data['phone_number'] = trim($_POST['phone_number'] ?? '');
-            $input_data['dob'] = trim($_POST['dob'] ?? '');
-            $input_data['gender'] = $_POST['gender'] ?? ''; // '0' (Nữ) hoặc '1' (Nam)
-            $password = $_POST['password'] ?? '';
-            
-            // 2. Kiểm tra tính hợp lệ cơ bản
-            if (empty($input_data['name']) || empty($input_data['email']) || empty($password)) {
-                $error_message = "Vui lòng nhập đầy đủ các trường bắt buộc.";
-            } elseif (!filter_var($input_data['email'], FILTER_VALIDATE_EMAIL)) {
-                $error_message = "Địa chỉ Email không hợp lệ.";
-            } elseif (strlen($password) < 6) {
-                $error_message = "Mật khẩu phải có ít nhất 6 ký tự.";
-            } elseif ($this->userModel->isEmailExist($input_data['email'])) { // Kiểm tra Email đã tồn tại
-                $error_message = "Email này đã được đăng ký. Vui lòng đăng nhập.";
+        // Validate
+        if (empty($name) || empty($email) || empty($phone) || empty($password) || empty($gender)) {
+            $error_message = "Vui lòng điền đầy đủ các trường bắt buộc.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error_message = "Email không hợp lệ.";
+        } elseif (strlen($password) < 6) {
+            $error_message = "Mật khẩu phải có ít nhất 6 ký tự.";
+        } elseif ($this->userModel->isEmailExist($email)) {
+            $error_message = "Email này đã được sử dụng. Vui lòng đăng nhập.";
+        } else {
+            // Dữ liệu hợp lệ → lưu vào DB
+            $data = [
+                'name'      => $name,
+                'email'     => $email,
+                'password'  => $password,        // Lưu plaintext (theo dữ liệu mẫu hiện tại)
+                'phone'     => $phone,
+                'dob'       => $dob,
+                'gender'    => $gender
+            ];
+
+            if ($this->userModel->registerUser($data)) {
+                // Đăng ký thành công → chuyển về trang login với thông báo
+                header("Location: index.php?page=login&register=success");
+                exit;
             } else {
-                
-                // 3. Hash mật khẩu và chuẩn bị dữ liệu cho Model
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                
-                $data = [
-                    'name' => $input_data['name'],
-                    'email' => $input_data['email'],
-                    'password_hash' => $hashed_password,
-                    'phone_number' => $input_data['phone_number'],
-                    'dob' => $input_data['dob'],
-                    'gender' => $input_data['gender']
-                ];
-
-                // 4. Gọi Model để lưu vào DB
-                if ($this->userModel->registerUser($data)) {
-                    $success_message = "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.";
-                    
-                    // Chuyển hướng về trang đăng nhập sau khi đăng ký thành công
-                    header('Location: index.php?route=login&status=success'); 
-                    exit;
-                    
-                } else {
-                    $error_message = "Đã xảy ra lỗi trong quá trình đăng ký tài khoản. Vui lòng thử lại.";
-                }
+                $error_message = "Đăng ký thất bại. Vui lòng thử lại.";
             }
         }
-        
-        // Nạp View (Hiển thị form đăng ký với lỗi hoặc dữ liệu đã nhập)
-        include_once 'pages/register.php';
     }
+
+    // Hiển thị form đăng ký
+    include_once 'pages/register.php';
+}
 }
