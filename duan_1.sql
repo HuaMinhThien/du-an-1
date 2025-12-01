@@ -1310,7 +1310,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `role`, `phone`, `login_day`) VALUES
 (0, 'Guest User', 'guest@system.com', '', 'user', '', '2025-11-28 18:41:36'),
 (1, 'Admin User', 'admin@gmail.com', '123456', 'admin', '0123456789', '2025-11-26 00:00:00'),
-(2, 'Test User', 'test@example.com', '123456', 'user', '0987654321', '2025-11-25 00:00:00');
+(2, 'Test User', 'test@example.com', '123456', 'user', '0987654321', '2025-11-25 00:00:00'),
+(3, 'Liêm Trần', 'liemtran3107@gmail.com', '123', 'user', '0987654321', '2025-11-25 00:00:00');
 
 -- --------------------------------------------------------
 
