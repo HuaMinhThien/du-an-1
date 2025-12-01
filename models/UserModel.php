@@ -59,27 +59,21 @@ class UserModel {
      * @param array $data Mảng chứa name, email, password, phone_number, dob, gender
      * @return bool
      */
-    public function registerUser(array $data): bool {
-        // Sửa cột từ password_hash thành password, và sử dụng plaintext để khớp với SQL dump
-        // Chú ý: Đảm bảo các cột này tồn tại trong bảng user của bạn
-        $query = "INSERT INTO " . $this->table_name . " (name, email, password, phone, login_day) 
-                  VALUES (:name, :email, :password, :phone, NOW())"; // Sửa: phone thay vì phone_number, và thêm login_day mặc định
+   public function registerUser(array $data): bool {
+    $query = "INSERT INTO user 
+              (name, email, password, phone, dob, gender, login_day, role) 
+              VALUES 
+              (:name, :email, :password, :phone, :dob, :gender, NOW(), 'user')";
 
-        $stmt = $this->conn->prepare($query);
+    $stmt = $this->conn->prepare($query);
 
-        // Bind dữ liệu (không hash password để khớp với dữ liệu mẫu plaintext)
-        $stmt->bindParam(':name', $data['name']);
-        $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':password', $data['password']); // Lưu plaintext
-        $stmt->bindParam(':phone', $data['phone']); // Sửa: phone thay vì phone_number trong SQL dump
+    $stmt->bindParam(':name', $data['name']);
+    $stmt->bindParam(':email', $data['email']);
+    $stmt->bindParam(':password', $data['password']); // plaintext như dữ liệu mẫu
+    $stmt->bindParam(':phone', $data['phone']);
+    $stmt->bindParam(':dob', $data['dob']);
+    $stmt->bindParam(':gender', $data['gender']);
 
-        try {
-            // Thực thi và trả về kết quả (true/false)
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            // Xử lý lỗi DB, ví dụ: ghi log
-            // error_log("Registration error: " . $e->getMessage()); 
-            return false;
-        }
-    }
+    return $stmt->execute();
+}
 }

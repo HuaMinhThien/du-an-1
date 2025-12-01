@@ -5,16 +5,31 @@
         <div class="register-form-container login-form-container">
             
             <h1 class="register-title login-title">TẠO TÀI KHOẢN</h1>
-            
+
+            <!-- THÔNG BÁO ĐĂNG KÝ THÀNH CÔNG -->
+            <?php if (isset($_GET['register']) && $_GET['register'] === 'success'): ?>
+                <div class="alert alert-success" style="background:#d4edda; color:#155724; padding:15px; border-radius:8px; margin:20px 0; text-align:center; font-weight:bold;">
+                    Đăng ký thành công!<br>
+                    Đang chuyển đến trang đăng nhập...
+                </div>
+                <script>
+                    setTimeout(() => {
+                        window.location.href = 'index.php?page=login';
+                    }, 2000);
+                </script>
+            <?php endif; ?>
+
+            <!-- THÔNG BÁO LỖI -->
             <?php if (!empty($error_message)): ?>
-                <div class="alert alert-danger" style="color: red; margin-bottom: 15px; border: 1px solid red; padding: 10px; border-radius: 5px; background-color: #ffeaea; text-align: left; font-size: 0.9em;">
+                <div class="alert alert-danger" style="color:#721c24; background:#f8d7da; border:1px solid #f5c6cb; padding:12px; border-radius:5px; margin-bottom:15px; font-size:0.95em;">
                     <?php echo htmlspecialchars($error_message); ?>
                 </div>
             <?php endif; ?>
             
             <p class="register-instruction login-instruction">Quý khách vui lòng nhập thông tin để đăng ký</p>
             
-            <form action="index.php?route=register" method="POST" class="email-register-form">
+            <!-- FORM ĐĂNG KÝ - ĐÃ SỬA ACTION & NAME FIELD -->
+            <form action="index.php?page=register" method="POST" class="email-register-form">
                 
                 <input 
                     type="text" 
@@ -25,7 +40,7 @@
                     value="<?php echo htmlspecialchars($input_data['name'] ?? ''); ?>"
                 >
 
-                <div class="gender-selection-group">
+                <div class="gender-selection-group" style="margin: 15px 0; text-align: left;">
                     <label class="gender-radio">
                         <input 
                             type="radio" 
@@ -35,7 +50,7 @@
                             <?php echo (isset($input_data['gender']) && $input_data['gender'] === '0') ? 'checked' : ''; ?>
                         > Nữ
                     </label>
-                    <label class="gender-radio">
+                    <label class="gender-radio" style="margin-left: 25px;">
                         <input 
                             type="radio" 
                             name="gender" 
@@ -44,24 +59,25 @@
                             <?php echo (isset($input_data['gender']) && $input_data['gender'] === '1') ? 'checked' : ''; ?>
                         > Nam
                     </label>
+                    
                 </div>
                 
                 <input 
                     type="date" 
                     name="dob" 
-                    placeholder="dd/mm/yyyy" 
                     required 
                     class="login-input date-input"
                     value="<?php echo htmlspecialchars($input_data['dob'] ?? ''); ?>"
                 >
                 
+                <!-- ĐÃ ĐỔI THÀNH name="phone" ĐỂ KHỚP VỚI MODEL -->
                 <input 
                     type="tel" 
-                    name="phone_number" 
-                    placeholder="Phone number" 
+                    name="phone" 
+                    placeholder="Số điện thoại" 
                     required 
                     class="login-input"
-                    value="<?php echo htmlspecialchars($input_data['phone_number'] ?? ''); ?>"
+                    value="<?php echo htmlspecialchars($input_data['phone'] ?? ''); ?>"
                 >
                 
                 <input 
@@ -73,17 +89,33 @@
                     value="<?php echo htmlspecialchars($input_data['email'] ?? ''); ?>"
                 >
                 
-                <input type="password" name="password" placeholder="Mật khẩu" required class="login-input">
+                <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Mật khẩu (tối thiểu 6 ký tự)" 
+                    required 
+                    class="login-input"
+                    minlength="6"
+                >
                 
-                <p class="terms-note">
-                    Nhấn vào **"Đăng ký"** quý khách chấp nhận nhận <a href="#" class="policy-link">điều khoản dịch vụ</a> của chúng tôi.
+                <p class="terms-note" style="font-size: 0.9em; color: #555; margin: 15px 0;">
+                    Nhấn vào <strong>"Đăng ký"</strong> nghĩa là quý khách đã đồng ý với 
+                    <a href="#" class="policy-link">điều khoản dịch vụ</a> của chúng tôi.
                 </p>
                 
-                <button type="submit" class="btn-register-submit btn-login-submit">Đăng ký</button>
+                <button type="submit" class="btn-register-submit btn-login-submit">
+                    Đăng ký
+                </button>
             </form>
 
-            <div class="back-to-home-link">
-                <a href="index.php" class="register-link">&leftarrow; Quay lại trang chủ</a>
+            <div class="back-to-home-link" style="margin-top: 20px; text-align: center;">
+                <a href="index.php?page=login" style="color: #007bff; font-weight: 500;">
+                    Đã có tài khoản? Đăng nhập ngay
+                </a>
+                <br><br>
+                <a href="index.php" class="register-link">
+                    Quay lại trang chủ
+                </a>
             </div>
 
         </div> 
