@@ -33,19 +33,19 @@ $full_description    = $product['description_full'] ?? $product['description'] ?
         </div>
         
         <div class="product-info-panel">
+            
+            <p class="sale-SP" > MIỄN PHÍ VẬN CHUYỂN ĐƠN HÀNG TỪ 500K</p>
+
             <h1 class="product-name"><?php echo htmlspecialchars($product['name']); ?></h1>
             
+            <p style="font-size: 14px;">SKU: WS25FH63P-LC</p>
+
             <div class="price-section">
                 <?php 
-                $display_price = $product['price'] ?? 0;
-                $display_sale_price = $product['sale_price'] ?? $display_price;
+                    $display_price = $product['price'] ?? 0;
                 ?>
-                <?php if ($display_sale_price < $display_price): ?>
-                    <span class="sale-price"><?php echo number_format($display_sale_price, 0, ',', '.'); ?>₫</span>
-                    <span class="original-price"><?php echo number_format($display_price, 0, ',', '.'); ?>₫</span>
-                <?php else: ?>
+                
                     <span class="current-price"><?php echo number_format($display_price, 0, ',', '.'); ?>₫</span>
-                <?php endif; ?>
             </div>
             
             <form id="add-to-cart-form" action="index.php?page=cart&action=add" method="POST">
@@ -86,21 +86,23 @@ $full_description    = $product['description_full'] ?? $product['description'] ?
                 </div>
                 
                 <div class="action-buttons">
-                    <button type="submit" class="btn-add-to-cart">
-                        Thêm vào Giỏ hàng
-                    </button>
-                    
+
                     <button type="button" id="buy-now-button" class="btn-buy-now">
                         Mua Ngay
                     </button>
+                    <button type="submit" class="btn-add-to-cart" style="border: 1px solid #001F3E;">
+                        Thêm vào Giỏ hàng
+                    </button>
+                    
+                    
                 </div>
             </form>
         </div>
     </div>
 
     <div class="product-description-full">
-        <h2>Mô tả chi tiết</h2>
-        <p><?php echo nl2br(htmlspecialchars($full_description)); ?></p>
+        <h2 style="margin-bottom: 20px;" >Mô tả chi tiết</h2>
+        <p style="margin-bottom: 20px;"><?php echo nl2br(htmlspecialchars($full_description)); ?></p>
         
         <div class="description-images">
              <img src="<?php echo htmlspecialchars($imagePath . $product_image); ?>" alt="Ảnh Sản Phẩm Chính">

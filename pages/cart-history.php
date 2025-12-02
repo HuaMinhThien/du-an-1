@@ -28,21 +28,23 @@
                     $firstItem = $items[0]; // Lấy info chung từ item đầu
                 ?>
                     <div class="order-item <?= strtolower($firstItem['status']) ?>">
-                        <div class="container-history">
+                        
                             <div class="product-info">
                             <?php foreach ($items as $item): ?>
-                            <div class="product-thumb">
-                                <img src="assets/images/sanpham/<?= htmlspecialchars($item['product_image']) ?>" alt="<?= htmlspecialchars($item['product_name']) ?>">
-                            </div>
-                            <div class="product-details">
-                                <p class="product-name"><?= htmlspecialchars($item['product_name']) ?></p>
-                                <p class="product-quantity">Số lượng: x<?= $item['quantity'] ?></p>
-                                <p class="product-sku">Màu: <?= htmlspecialchars($item['color_name']) ?> / Size: <?= htmlspecialchars($item['size_name']) ?></p>
-                                <a href="index.php?page=products_Details&id=<?= $item['product_id'] ?>" class="view-detail-link">Xem chi tiết</a>
+                            <div class="o-sanpham-img-name">
+                                <div class="product-thumb">
+                                    <img src="assets/images/sanpham/<?= htmlspecialchars($item['product_image']) ?>" alt="<?= htmlspecialchars($item['product_name']) ?>">
+                                </div>
+                                <div class="product-details">
+                                    <p class="product-name"><?= htmlspecialchars($item['product_name']) ?></p>
+                                    <p class="product-quantity">Số lượng: x<?= $item['quantity'] ?></p>
+                                    <p class="product-sku">Màu: <?= htmlspecialchars($item['color_name']) ?> / Size: <?= htmlspecialchars($item['size_name']) ?></p>
+                                    <a href="index.php?page=products_Details&id=<?= $item['product_id'] ?>" class="view-detail-link">Xem chi tiết</a>
+                                </div>
                             </div>
                             <hr>
                             <?php endforeach; ?>
-                        </div>
+                        
                         
                     </div>
                         
