@@ -45,7 +45,7 @@
                         <input 
                             type="radio" 
                             name="gender" 
-                            value="0" 
+                            value="2" 
                             required 
                             <?php echo (isset($input_data['gender']) && $input_data['gender'] == '0') ? 'checked' : ''; ?>
                         > Nữ
