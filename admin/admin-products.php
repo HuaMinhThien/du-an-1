@@ -206,7 +206,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'hide' && isset($_GET['id'])) 
                                 <tr>
                                     <td class="product-index"><?php echo $i + 1; ?></td>
                                     <td class="product-image-cell">
-                                        <img src="<?php echo htmlspecialchars($p['img'] ?: 'https://via.placeholder.com/60'); ?>" class="product-img" alt="">
+                                        <img src="assets/images/sanpham/<?php echo htmlspecialchars($p['img'] ?: 'https://via.placeholder.com/60'); ?>" class="product-img" alt="">
                                     </td>
                                     <td><?php echo htmlspecialchars($p['name']); ?></td>
                                     <td><?php echo number_format($p['price']); ?>đ</td>
