@@ -1,7 +1,7 @@
 <?php
 // File: controllers/UserController.php
 
-// 1. Nhúng file Database (Bạn thay đường dẫn đúng tới file connect DB của bạn)
+
 require_once '../config/database.php'; 
 require_once '../models/UserModel.php';
 
