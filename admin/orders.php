@@ -9,10 +9,10 @@
 
     <main>
         <div class="filter-group" style="margin-bottom: 1rem;">
-            <button class="filter-btn active">Tất cả</button>
-            <button class="filter-btn">Chờ duyệt</button>
-            <button class="filter-btn">Đã giao</button>
-            <button class="filter-btn">Đã hủy</button>
+            <button class="filter-btn active" data-status="all">Tất cả</button>
+            <button class="filter-btn" data-status="pending">Chờ duyệt</button>
+            <button class="filter-btn" data-status="success">Đã giao</button>
+            <button class="filter-btn" data-status="danger">Đã hủy</button>
         </div>
 
         <div class="card">
@@ -41,8 +41,8 @@
                             <td>
                                 <div class="action-group">
                                     <button class="btn btn-dark btn-detail">Chi tiết</button>
-                                    <button class="btn btn-dark">Duyệt</button>
-                                    <button class="btn btn-danger">Hủy</button>
+                                    <button class="btn btn-dark btn-approve">Duyệt</button> 
+                                    <button class="btn btn-danger btn-cancel">Hủy</button> 
                                 </div>
                             </td>
                         </tr>
@@ -82,8 +82,8 @@
                             <td>
                                 <div class="action-group">
                                     <button class="btn btn-dark btn-detail">Chi tiết</button>
-                                    <button class="btn btn-dark">Duyệt</button>
-                                    <button class="btn btn-danger">Hủy</button>
+                                    <button class="btn btn-dark btn-approve">Duyệt</button> 
+                                    <button class="btn btn-danger btn-cancel">Hủy</button> 
                                 </div>
                             </td>
                         </tr>
@@ -218,8 +218,89 @@
 </div>
 
 <script>
+    /* =========================================
+       1. XỬ LÝ DUYỆT / HỦY ĐƠN HÀNG (MỚI THÊM)
+       ========================================= */
+    
+    // --- Chức năng Duyệt đơn ---
+    const approveBtns = document.querySelectorAll('.btn-approve');
+    approveBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!confirm('Bạn có chắc muốn duyệt đơn hàng này?')) return;
+
+            // 1. Tìm dòng chứa nút vừa bấm
+            const row = this.closest('tr');
+            
+            // 2. Tìm badge trạng thái trong dòng đó
+            const badge = row.querySelector('.badge');
+
+            // 3. Cập nhật giao diện Badge -> Đã giao (Xanh)
+            badge.textContent = 'Đã giao';
+            badge.className = 'badge success'; // Reset class và set thành success
+
+            // 4. Ẩn nút Duyệt và Hủy đi (Chỉ giữ lại nút Chi tiết)
+            this.style.display = 'none'; // Ẩn nút Duyệt
+            const cancelBtn = row.querySelector('.btn-cancel');
+            if (cancelBtn) cancelBtn.style.display = 'none'; // Ẩn nút Hủy
+        });
+    });
+
+    // --- Chức năng Hủy đơn ---
+    const cancelBtns = document.querySelectorAll('.btn-cancel');
+    cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return;
+
+            // 1. Tìm dòng chứa nút vừa bấm
+            const row = this.closest('tr');
+
+            // 2. Tìm badge trạng thái
+            const badge = row.querySelector('.badge');
+
+            // 3. Cập nhật giao diện Badge -> Đã hủy (Đỏ)
+            badge.textContent = 'Đã hủy';
+            badge.className = 'badge danger';
+
+            // 4. Ẩn nút Duyệt và Hủy đi
+            this.style.display = 'none'; // Ẩn nút Hủy
+            const approveBtn = row.querySelector('.btn-approve');
+            if (approveBtn) approveBtn.style.display = 'none'; // Ẩn nút Duyệt
+        });
+    });
+
+
+    /* =========================================
+       2. XỬ LÝ LỌC TRẠNG THÁI (FILTER)
+       ========================================= */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('tbody tr');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Xóa class active cũ, thêm vào nút mới bấm
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const status = btn.getAttribute('data-status');
+
+            tableRows.forEach(row => {
+                const badge = row.querySelector('.badge');
+                // Logic lọc: Nếu chọn All hoặc badge có class tương ứng thì hiện
+                if (status === 'all' || badge.classList.contains(status)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+
+
+    /* =========================================
+       3. XỬ LÝ MODAL CHI TIẾT (POPUP)
+       ========================================= */
     const modal = document.getElementById("modal-order-detail");
-    const btnsOpen = document.querySelectorAll(".btn-detail"); // Các nút có class btn-detail
+    const btnsOpen = document.querySelectorAll(".btn-detail"); 
     const btnClose = document.querySelector(".close-btn");
     const btnCloseFooter = document.querySelector(".btn-close-modal");
 
@@ -230,16 +311,11 @@
         });
     });
 
-    // Đóng modal (dấu X)
-    btnClose.onclick = () => modal.style.display = "none";
-    
-    // Đóng modal (Nút Đóng)
-    btnCloseFooter.onclick = () => modal.style.display = "none";
-
-    // Đóng khi click ra ngoài
-    window.onclick = (e) => {
-        if (e.target == modal) modal.style.display = "none";
-    }
+    // Các hàm đóng modal
+    function closeModal() { modal.style.display = "none"; }
+    btnClose.onclick = closeModal;
+    btnCloseFooter.onclick = closeModal;
+    window.onclick = (e) => { if (e.target == modal) closeModal(); }
 </script>
 
 </body>
