@@ -186,8 +186,7 @@ class HomeController {
     }
     
     public function login() {
-        // THÊM session_start() ở đầu hàm để tránh lỗi session
-        session_start();
+        
 
         // ============ CHỈ XỬ LÝ KHI NGƯỜI DÙNG NHẤN ĐĂNG NHẬP (POST) ============
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

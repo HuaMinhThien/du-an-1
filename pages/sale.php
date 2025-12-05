@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="assets/css/sale.css">
-<main>
+<main style="padding-bottom: 100px;">
     <div class="sale-bannerfull">
         <img src="assets/images/img-banner/banner-chinh-3.jpg" alt="">
     </div>

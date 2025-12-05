@@ -7,90 +7,91 @@
     <link rel="stylesheet" href="assets/css/header-footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 </head>
 <body>
-    
-    <header>
-        <div class="hd-container1-bg">
-            <div class="hd-container1-content container-center">
-                <a href="?page=home&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                    <div class="hd-logo">
-                        <img src="assets/images/img-logo/logo.jpg" alt="">
-                    </div>
-                </a>
 
-                <div class="hd-search">
-                    <input type="text" placeholder="Tìm kiếm sản phẩm...">
+<?php
+$user_id = $_SESSION['user_id'] ?? ($_GET['user_id'] ?? 0);
+$user_id = is_numeric($user_id) ? (int)$user_id : 0;
+?>
 
-                    <div class="hd-search-icon">
-                        <img src="assets/images/img-icon/search.png" alt="">
-                    </div>
+<header>
+    <div class="hd-container1-bg">
+        <div class="hd-container1-content container-center">
+            <a href="?page=home&user_id=<?php echo $user_id; ?>">
+                <div class="hd-logo">
+                    <img src="assets/images/img-logo/logo.jpg" alt="">
                 </div>
-                
-                <div class="hd-container-icon">
-                    <a href="?page=cart_history&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>"> <div class="hd-icon"><img src="assets/images/img-icon/clock.png" alt=""></div></a>
-                    <?php if ( $_SESSION['user_id'] != 0): ?>
-                        <a href="?page=user&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>"> <div class="hd-icon"><img src="assets/images/img-icon/user.png" alt=""></div></a>
-                    <?php else :?>
-                        <a href="?page=login&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>"> <div class="hd-icon"><img src="assets/images/img-icon/user.png" alt=""></div></a>
-                    <?php endif; ?>
-                    <a href="?page=cart&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>"> <div class="hd-icon"><img src="assets/images/img-icon/grocery-store.png" alt=""></div></a>
+            </a>
+
+            <div class="hd-search">
+                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                <div class="hd-search-icon">
+                    <img src="assets/images/img-icon/search.png" alt="">
                 </div>
             </div>
             
-        </div>
-        <div class="hd-container2-bg">
-            <div class="hd-container2-content container-center">
-                <a class="hd-a-cate" href="?page=home&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                    <div class="hd-categories">
-                        <p>Trang Chủ</p>
-                    </div>
+            <div class="hd-container-icon">
+                <a href="?page=cart_history&user_id=<?php echo $user_id; ?>">
+                    <div class="hd-icon"><img src="assets/images/img-icon/clock.png" alt=""></div>
                 </a>
                 
-                <!-- Áo với menu con -->
-                <div class="hd-a-cate-wrapper">
-                    <a class="hd-a-cate" href="?page=products&category_id=1&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                        <div class="hd-categories">
-                            <p>Áo</p>
-                            <img style="height: 10px; width: 10px; margin-top: 5px;" src="assets/images/img-icon/down-arrow.png" alt="">
-                        </div>
+                <?php if ($user_id != 0): ?>
+                    <a href="?page=user&user_id=<?php echo $user_id; ?>">
+                        <div class="hd-icon"><img src="assets/images/img-icon/user.png" alt=""></div>
                     </a>
-                    
-                </div>
-
-                <!-- Quần với menu con -->
-                <div class="hd-a-cate-wrapper">
-                    <a class="hd-a-cate" href="?page=products&category_id=2&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                        <div class="hd-categories">
-                            <p>Quần</p>
-                            <img style="height: 10px; width: 10px; margin-top: 5px;" src="assets/images/img-icon/down-arrow.png" alt="">
-                        </div>
+                <?php else: ?>
+                    <a href="?page=login">
+                        <div class="hd-icon"><img src="assets/images/img-icon/user.png" alt=""></div>
                     </a>
-                    
-                </div>
-
-                <!-- Phụ Kiện với menu con -->
-                <div class="hd-a-cate-wrapper">
-                    <a class="hd-a-cate" href="?page=products&category_id=12&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                        <div class="hd-categories">
-                            <p>Phụ Kiện</p>
-                            <img style="height: 10px; width: 10px; margin-top: 5px;" src="assets/images/img-icon/down-arrow.png" alt="">
-                        </div>
-                    </a>
-                    
-                </div>
+                <?php endif; ?>
                 
-                <a class="hd-a-cate" href="?page=sale&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                    <div class="hd-categories">
-                        <p>Khuyến Mãi</p>
-                    </div>
-                </a>
-                <a class="hd-a-cate" href="?page=shop&user_id=<?php echo $_GET['user_id'] ?? $_SESSION['user_id'] ?? 0; ?>">
-                    <div class="hd-categories">
-                        <p>Cửa Hàng</p>
-                    </div>
+                <a href="?page=cart&user_id=<?php echo $user_id; ?>">
+                    <div class="hd-icon"><img src="assets/images/img-icon/grocery-store.png" alt=""></div>
                 </a>
             </div>
         </div>
-    </header>
+    </div>
+
+    <div class="hd-container2-bg">
+        <div class="hd-container2-content container-center">
+            <a class="hd-a-cate" href="?page=home&user_id=<?php echo $user_id; ?>">
+                <div class="hd-categories"><p>Trang Chủ</p></div>
+            </a>
+            
+            <div class="hd-a-cate-wrapper">
+                <a class="hd-a-cate" href="?page=products&category_id=1&user_id=<?php echo $user_id; ?>">
+                    <div class="hd-categories">
+                        <p>Áo</p>
+                        <img style="height: 10px; width: 10px; margin-top: 5px;" src="assets/images/img-icon/down-arrow.png" alt="">
+                    </div>
+                </a>
+            </div>
+
+            <div class="hd-a-cate-wrapper">
+                <a class="hd-a-cate" href="?page=products&category_id=2&user_id=<?php echo $user_id; ?>">
+                    <div class="hd-categories">
+                        <p>Quần</p>
+                        <img style="height: 10px; width: 10px; margin-top: 5px;" src="assets/images/img-icon/down-arrow.png" alt="">
+                    </div>
+                </a>
+            </div>
+
+            <div class="hd-a-cate-wrapper">
+                <a class="hd-a-cate" href="?page=products&category_id=12&user_id=<?php echo $user_id; ?>">
+                    <div class="hd-categories">
+                        <p>Phụ Kiện</p>
+                        <img style="height: 10px; width: 10px; margin-top: 5px;" src="assets/images/img-icon/down-arrow.png" alt="">
+                    </div>
+                </a>
+            </div>
+            
+            <a class="hd-a-cate" href="?page=sale&user_id=<?php echo $user_id; ?>">
+                <div class="hd-categories"><p>Khuyến Mãi</p></div>
+            </a>
+            <a class="hd-a-cate" href="?page=shop&user_id=<?php echo $user_id; ?>">
+                <div class="hd-categories"><p>Cửa Hàng</p></div>
+            </a>
+        </div>
+    </div>
+</header>
